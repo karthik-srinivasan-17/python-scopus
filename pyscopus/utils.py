@@ -220,6 +220,10 @@ def _parse_article(entry):
     except:
         scopus_id = None
     try:
+        eid = entry['eid']
+    except:
+        eid = None
+    try:
         title = entry['dc:title']
     except:
         title = None
@@ -285,7 +289,7 @@ def _parse_article(entry):
     except:
         full_text_link = None
 
-    return pd.Series({'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
+    return pd.Series({'eid':eid,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume, 'page_range': pagerange,\
             'cover_date': coverdate, 'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
