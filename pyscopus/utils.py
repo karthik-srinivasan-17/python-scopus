@@ -228,7 +228,7 @@ def _parse_article(entry):
     except:
         pubmed_id = None
     try:
-        issue = entry['prism:issueidentifier']
+        issue = entry['prism:issueIdentifier']
     except:
         issue = None
     try:
