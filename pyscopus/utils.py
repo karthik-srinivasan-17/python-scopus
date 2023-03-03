@@ -224,6 +224,10 @@ def _parse_article(entry):
     except:
         eid = None
     try:
+        pubmed_id = entry['pubmed-id']
+    except:
+        pubmed_id = None
+    try:
         title = entry['dc:title']
     except:
         title = None
@@ -294,7 +298,7 @@ def _parse_article(entry):
     except:
         art_no = None
 
-    return pd.Series({'eid':eid,'art_no': art_no,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
+    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume, 'page_range': pagerange,\
             'cover_date': coverdate, 'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
