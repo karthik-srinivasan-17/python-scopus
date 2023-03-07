@@ -302,7 +302,12 @@ def _parse_article(entry):
     except:
         art_no = None
 
-    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
+    try:
+        open_access = entry['freetoreadLabel']
+    except:
+        open_access = None
+
+    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume, 'page_range': pagerange,\
             'cover_date': coverdate, 'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
