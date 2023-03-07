@@ -260,6 +260,14 @@ def _parse_article(entry):
     except:
         pagerange = None
     try:
+        pageStart = pagerange.split('-')[0]
+    except:
+        pageStart = None
+    try:
+        pageEnd = pagerange.split('-')[1]
+    except:
+        pageEnd = None    
+    try:
         coverdate = entry['prism:coverDate']
     except:
         coverdate = None
@@ -307,7 +315,7 @@ def _parse_article(entry):
     except:
         open_access = None
 
-    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
+    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access, 'pageStart': pageStart, 'pageEnd': pageEnd,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume, 'page_range': pagerange,\
             'cover_date': coverdate, 'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
