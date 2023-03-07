@@ -266,11 +266,19 @@ def _parse_article(entry):
     try:
         pageEnd = pagerange.split('-')[1]
     except:
-        pageEnd = None    
+        pageEnd = None
+    try:
+        pageCount = int(pageEnd) - int(pageStart)
+    except:
+        pageCount = None          
     try:
         coverdate = entry['prism:coverDate']
     except:
         coverdate = None
+    try:
+        year = coverdate.split('-')[0]
+    except:
+        year = None    
     try:
         doi = entry['prism:doi']
     except:
@@ -315,9 +323,13 @@ def _parse_article(entry):
     except:
         open_access = None
 
-    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access, 'pageStart': pageStart, 'pageEnd': pageEnd,'scopus_id': scopus_id, 'title': title, 'publication_name':publicationname,\
-            'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume, 'page_range': pagerange,\
-            'cover_date': coverdate, 'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
+    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
+            'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
+            'cover_date': coverdate, 'year':year,\
+            'scopus_id': scopus_id,\
+            'title': title, 'publication_name':publicationname,\
+            'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
+             'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
             'full_text': full_text_link})
 
