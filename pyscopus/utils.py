@@ -326,7 +326,7 @@ def _parse_article(entry):
     return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
             'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
             'cover_date': coverdate, 'year':year,\
-            'scopus_id': scopus_id,\
+            'scopus-id': scopus_id,\
             'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
              'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
