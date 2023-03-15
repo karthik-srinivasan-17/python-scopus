@@ -134,14 +134,14 @@ def _parse_citation(js_citation, year_range):
     return citation_df[columns]
 
 def _parse_affiliation(js_affiliation):
-    l = list()
+    l = ""
     for js_affil in js_affiliation:
         if len(l) != 0:
-            l.append(";")
+            l = l + "; "
         name = js_affil['affilname']
         city = js_affil['affiliation-city']
         country = js_affil['affiliation-country']
-        l.append({name,city,country})  
+        l = l + name + ", " + city+", "+ country
     return l
 
 def _parse_author_affiliation(js_affiliation_entry):
