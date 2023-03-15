@@ -136,10 +136,12 @@ def _parse_citation(js_citation, year_range):
 def _parse_affiliation(js_affiliation):
     l = list()
     for js_affil in js_affiliation:
+        if len(l) != 0:
+            l.append(";")
         name = js_affil['affilname']
         city = js_affil['affiliation-city']
         country = js_affil['affiliation-country']
-        l.append({'name': name, 'city': city, 'country': country})
+        l.append(name+", "+city+", ",country)  
     return l
 
 def _parse_author_affiliation(js_affiliation_entry):
@@ -321,8 +323,8 @@ def _parse_article(entry):
     try:
         freetoreadLabel = entry['freetoreadLabel']
         open_access = ""
-        valueVar = freetoreadLabel["value"]
-        for i in valueVar:
+        valueList = freetoreadLabel["value"]
+        for i in valueList:
             temp = i["$"]
             if(len(open_access) != 0):
                 open_access = open_access +', '
