@@ -319,7 +319,14 @@ def _parse_article(entry):
         art_no = None
 
     try:
-        open_access = entry['freetoreadLabel']
+        freetoreadLabel = entry['freetoreadLabel']
+        open_access = ""
+        valueVar = freetoreadLabel["value"]
+        for i in valueVar:
+            temp = i["$"]
+            if(len(open_access) != 0):
+                open_access = open_access +', '
+            open_access = open_access+temp           
     except:
         open_access = None
 
