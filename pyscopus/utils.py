@@ -141,7 +141,7 @@ def _parse_affiliation(js_affiliation):
         name = js_affil['affilname']
         city = js_affil['affiliation-city']
         country = js_affil['affiliation-country']
-        l.append(name+", "+city+", ",country)  
+        l.append({name,city,country})  
     return l
 
 def _parse_author_affiliation(js_affiliation_entry):
