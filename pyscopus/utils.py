@@ -149,7 +149,7 @@ def _parse_affiliation(js_affiliation):
         city = js_affil['affiliation-city']
         country = js_affil['affiliation-country']
         l.append({'name': name, 'city': city, 'country': country})
-    return 
+    return l
 
 def _parse_author_affiliation(js_affiliation_entry):
     affiliation_dict = {}
