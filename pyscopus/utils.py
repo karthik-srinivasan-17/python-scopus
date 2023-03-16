@@ -407,13 +407,15 @@ def _parse_abstract_retrieval(abstract_entry):
         abbreviated_source_title = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
-    abstract_dict['abbreviated-source-title'] = abbreviated_source_title
+  
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
     # rename keys
     abstract_dict['scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
     abstract_dict['abstract'] = abstract_dict.pop('dc:description')
     abstract_dict['title'] = abstract_dict.pop('dc:title')
+    print(abbreviated_source_title)
+    abstract_dict['abbreviated-source-title'] = abbreviated_source_title
 
     return abstract_dict
 
