@@ -140,17 +140,20 @@ def _parse_affiliation(js_affiliation):
             l = l + "; "
         try:
             name = js_affil['affilname']
+            l = l + name + ", "
         except:
             name = None
         try:
             city = js_affil['affiliation-city']
+            l = l + city + ", "
         except:
             city = None
         try:
+            l = l + country + ", "
             country = js_affil['affiliation-country']
         except:
             country = None
-        l = l + name + ", " + city+", "+ country
+        l = l[:-2]
     return l
     """ l = list()
     for js_affil in js_affiliation:
