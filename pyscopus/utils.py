@@ -224,8 +224,6 @@ def _parse_author(entry):
             'affiliation': institution_name, 'affiliation_id': institution_id})
 
 def _parse_article(entry):
-    print("The entry is ")
-    print(entry)
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
@@ -396,8 +394,7 @@ def _parse_author_retrieval(author_entry):
     return author_dict
 
 def _parse_abstract_retrieval(abstract_entry):
-    print("The entry is ")
-    print(abstract_entry)
+    
     resp = abstract_entry['abstracts-retrieval-response']
 
     # coredata
@@ -449,7 +446,8 @@ def _search_scopus(key, query, type_, view, index=0):
     #print(r.url)
     total_count = int(js['search-results']['opensearch:totalResults'])
     entries = js['search-results']['entry']
-
+    print("the scopus search JS")
+    print(entries)
     result_df = pd.DataFrame([_parse_entry(entry, type_) for entry in entries])
 
     if index == 0:
