@@ -363,12 +363,17 @@ def _parse_author_retrieval(author_entry):
 
     # coredata
     coredata = resp['coredata']
+    try:
+        abbreviated_source_title = resp["abstracts-retrieval-response"]["item"]["bibrecord"]["head"]["source"]["codencode"]
+    except:
+        abbreviated_source_title = None
     author_dict['author-id'] = coredata['dc:identifier'].split(':')[-1]
     for item in ('eid', 'document-count', 'cited-by-count', 'citation-count'):
         author_dict[item] = coredata[item]
 
     # author-profile
     author_profile = resp['author-profile']
+    author_dict['abbreviated-source-title'] = abbreviated_source_title
 
     ## perferred name
     perferred_name = author_profile['preferred-name']
