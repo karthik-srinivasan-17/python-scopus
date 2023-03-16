@@ -237,6 +237,10 @@ def _parse_author(entry):
 
 def _parse_article(entry):
     try:
+        author = entry["author"]
+    except:
+        author = None
+    try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
         scopus_id = None
@@ -357,7 +361,7 @@ def _parse_article(entry):
     except:
         open_access = None
 
-    return pd.Series({'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
+    return pd.Series({'author': author,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
             'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
             'cover_date': coverdate, 'year':year,\
             'scopus-id': scopus_id,\
