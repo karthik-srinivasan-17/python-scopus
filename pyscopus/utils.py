@@ -322,9 +322,15 @@ def _parse_article(entry):
         sub_dc = None
     try:
         author_entry = entry['author']
-        author_id_list = [auth_entry['authid'] for auth_entry in author_entry]
+        #author_id_list = [auth_entry['authid'] for auth_entry in author_entry]
+        author_id_list = ""
+        for i in author_entry:
+            temp = i["authid"]
+            if(len(author_id_list) != 0):
+                author_id_list = author_id_list +'; '
+            author_id_list = author_id_list+temp   
     except:
-        author_id_list = list()
+        author_id_list = None
     try:
         link_list = entry['link']
         full_text_link = None
@@ -413,15 +419,16 @@ def _parse_abstract_retrieval(abstract_entry):
    
     # coredata
     coredata = resp['coredata']
-    
+    source = resp["item"]["bibrecord"]["head"]["source"]
     try:
-        source = resp["item"]["bibrecord"]["head"]["source"]
-      
         abbreviated_source_title = source["sourcetitle-abbrev"]
-        coden = source["codencode"]
     except:
         abbreviated_source_title = None
-        coden = None
+
+    try:
+        coden = source["codencode"]
+    except:
+        coden = None    
 
     try:
         authorKeywordsList = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]["author-keyword"]
