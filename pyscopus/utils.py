@@ -402,7 +402,7 @@ def _parse_abstract_retrieval(abstract_entry):
     # coredata
     coredata = resp['coredata']
     try:
-        abbreviated_source_title = resp["abstracts-retrieval-response"]["item"]["bibrecord"]["head"]["source"]["codencode"]
+        abbreviated_source_title = resp["item"]["bibrecord"]["head"]["source"]["codencode"]
     except:
         abbreviated_source_title = None
     # keys to exclude
