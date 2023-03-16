@@ -398,13 +398,19 @@ def _parse_author_retrieval(author_entry):
 def _parse_abstract_retrieval(abstract_entry):
     
     resp = abstract_entry['abstracts-retrieval-response']
-
+    print("Resp")
+    print(resp)
     # coredata
     coredata = resp['coredata']
+    
     try:
-        abbreviated_source_title = resp["item"]["bibrecord"]["head"]["source"]["codencode"]
+        source = resp["item"]["bibrecord"]["head"]["source"]
+      
+        abbreviated_source_title = source["sourcetitle-abbrev"]
+        coden = source["codencode"]
     except:
         abbreviated_source_title = None
+        coden = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
   
@@ -416,6 +422,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['title'] = abstract_dict.pop('dc:title')
     print(abbreviated_source_title)
     abstract_dict['abbreviated-source-title'] = abbreviated_source_title
+    abstract_dict['coden'] = coden
 
     return abstract_dict
 
