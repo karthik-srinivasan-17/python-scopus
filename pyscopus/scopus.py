@@ -175,8 +175,7 @@ class Scopus(object):
             if not download_path.endswith('/'):
                 download_path += '/'
             json.dump(js, open(download_path+scopus_id+'.json', 'w'))
-        print("The Abstract JS is ")
-        print(js)
+      
         try:
             return _parse_abstract_retrieval(js)
         except:

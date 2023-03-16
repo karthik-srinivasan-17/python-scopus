@@ -461,8 +461,6 @@ def _search_scopus(key, query, type_, view, index=0):
     #print(r.url)
     total_count = int(js['search-results']['opensearch:totalResults'])
     entries = js['search-results']['entry']
-    print("the scopus search JS")
-    print(entries)
     result_df = pd.DataFrame([_parse_entry(entry, type_) for entry in entries])
 
     if index == 0:
