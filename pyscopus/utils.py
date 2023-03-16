@@ -422,6 +422,17 @@ def _parse_abstract_retrieval(abstract_entry):
     except:
         abbreviated_source_title = None
         coden = None
+
+    try:
+        authorKeywordsList = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]["author-keyword"]
+        author_keywords = ""
+        for i in authorKeywordsList:
+            temp = i["$"]
+            if(len(author_keywords) != 0):
+                author_keywords = author_keywords +'; '
+            author_keywords = author_keywords+temp   
+    except:
+        author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
   
@@ -431,9 +442,10 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
     abstract_dict['abstract'] = abstract_dict.pop('dc:description')
     abstract_dict['title'] = abstract_dict.pop('dc:title')
-    print(abbreviated_source_title)
     abstract_dict['abbreviated-source-title'] = abbreviated_source_title
     abstract_dict['coden'] = coden
+    abstract_dict['author_keywords'] = author_keywords
+    
 
     return abstract_dict
 
