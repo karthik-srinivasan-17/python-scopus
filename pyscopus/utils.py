@@ -238,8 +238,15 @@ def _parse_author(entry):
 def _parse_article(entry):
     try:
         author = entry["author"]
+        author = sorted(author,key=lambda i:i["@seq"])
+        author_name_list = ""
+        for i in author:
+            temp = i["authname"]
+            if(len(author_name_list) != 0):
+                author_name_list = author_name_list +', '
+            author_name_list = author_name_list+temp  
     except:
-        author = None
+        author_name_list = None
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
@@ -361,14 +368,14 @@ def _parse_article(entry):
     except:
         open_access = None
 
-    return pd.Series({'author': author,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
+    return pd.Series({'author':author_name_list,'author-id': author_id_list,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
             'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
             'cover_date': coverdate, 'year':year,\
             'scopus-id': scopus_id,\
             'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
              'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
-            'aggregation_type': aggregationtype, 'subtype_description': sub_dc, 'authors': author_id_list,\
+            'aggregation_type': aggregationtype, 'subtype_description': sub_dc,\
             'full_text': full_text_link})
 
 def _parse_entry(entry, type_):
