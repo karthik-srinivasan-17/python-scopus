@@ -3,6 +3,7 @@
 import requests, warnings, os, json
 import numpy as np
 import pandas as pd
+
 from datetime import date
 from pyscopus import APIURI
 from pyscopus.utils import _parse_author, _parse_author_retrieval,\

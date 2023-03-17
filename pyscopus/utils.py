@@ -6,6 +6,8 @@
 import requests
 import numpy as np
 import pandas as pd
+import urllib
+from requests.utils import requote_uri
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -385,7 +387,13 @@ def _parse_article(entry):
     except:
         open_access = None
 
-    return pd.Series({'author':author_name_list,'author-id': author_id_list,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
+    try:
+        linkString = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
+        Link = requote_uri(linkString)
+    except:
+        Link = None        
+
+    return pd.Series({'Link':Link,'author':author_name_list,'author-id': author_id_list,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
             'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
             'cover_date': coverdate, 'year':year,\
             'scopus-id': scopus_id,"author_with_affliation":author_with_affliation_string,\
