@@ -134,6 +134,8 @@ def _parse_citation(js_citation, year_range):
     return citation_df[columns]
 
 def _parse_affiliation(js_affiliation):
+    print("js_affiliation Entry")
+    print(js_affiliation)
     l = ""
     for js_affil in js_affiliation:
         if len(l) != 0:
@@ -239,6 +241,8 @@ def _parse_article(entry):
     try:
         author = entry["author"]
         author = sorted(author,key=lambda i:i["@seq"])
+        print("Author Entry")
+        print(author)
         author_name_list = ""
         for i in author:
             temp = i["authname"]
