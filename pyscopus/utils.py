@@ -136,27 +136,36 @@ def _parse_citation(js_citation, year_range):
 def _parse_affiliation(js_affiliation):
     print("js_affiliation Entry")
     print(js_affiliation)
-    l = ""
+    
+    affString =""
+    affdict={}
     for js_affil in js_affiliation:
-        if len(l) != 0:
-            l = l + "; "
+        l = ""
+        if len(affString) != 0:
+            affString = affString + "; "
         try:
             name = js_affil['affilname']
             l = l + name + ", "
         except:
             name = None
         try:
+            afid = js_affil['afid']
+        except:
+            afid = None    
+        try:
             city = js_affil['affiliation-city']
             l = l + city + ", "
         except:
             city = None
         try:
-            l = l + country + ", "
             country = js_affil['affiliation-country']
+            l = l + country + ", "
         except:
             country = None
         l = l[:-2]
-    return l
+        affString = affString + l
+        affdict = {**affdict, afid: l}
+    return affString, affdict
     """ l = list()
     for js_affil in js_affiliation:
         name = js_affil['affilname']
@@ -239,18 +248,30 @@ def _parse_author(entry):
 
 def _parse_article(entry):
     try:
+        affiliation, affliationDict = _parse_affiliation(entry['affiliation'])
+    except:
+        affiliation, affliationDict = None
+    try:
         author = entry["author"]
         author = sorted(author,key=lambda i:i["@seq"])
         print("Author Entry")
         print(author)
         author_name_list = ""
+        author_with_affliation_string = ""
         for i in author:
+            if len(author_with_affliation_string) != 0:
+                author_with_affliation_string = author_with_affliation_string + "; "
             temp = i["authname"]
+            afidlist = i["afid"]
+            for j in afidlist: 
+                afid = j["$"]
+            author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
             if(len(author_name_list) != 0):
                 author_name_list = author_name_list +', '
             author_name_list = author_name_list+temp  
     except:
         author_name_list = None
+        author_with_affliation_string = None
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
@@ -323,10 +344,7 @@ def _parse_article(entry):
         citationcount = int(entry['citedby-count'])
     except:
         citationcount = None
-    try:
-        affiliation = _parse_affiliation(entry['affiliation'])
-    except:
-        affiliation = None
+    
     try:
         aggregationtype = entry['prism:aggregationType']
     except:
@@ -375,7 +393,7 @@ def _parse_article(entry):
     return pd.Series({'author':author_name_list,'author-id': author_id_list,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
             'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
             'cover_date': coverdate, 'year':year,\
-            'scopus-id': scopus_id,\
+            'scopus-id': scopus_id,"author_with_affliation":author_with_affliation_string,\
             'title': title, 'publication_name':publicationname,\
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
              'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
