@@ -6,8 +6,7 @@
 import requests
 import numpy as np
 import pandas as pd
-import urllib
-from urllib.parse import urlencode
+import urllib.parse
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -272,9 +271,9 @@ def _parse_article(entry):
             if(len(author_name_list) != 0):
                 author_name_list = author_name_list +', '
             author_name_list = author_name_list+temp  
-            if i==0:
+            if author[i]==0:
                 first_author_affiliation = affliationDict[afid]   
-            if i==len(author)-1:
+            if author[i]==len(author)-1:
                 last_author_affiliation = affliationDict[afid]  
     except:
         author_name_list = None
@@ -410,7 +409,7 @@ def _parse_article(entry):
 
     try:
         linkString = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
-        Link = urlencode(linkString)
+        Link = urllib.parse.quote_plus(linkString)
     except:
         Link = None        
 
