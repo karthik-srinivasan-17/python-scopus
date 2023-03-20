@@ -264,13 +264,15 @@ def _parse_article(entry):
             if len(author_with_affliation_string) != 0:
                 author_with_affliation_string = author_with_affliation_string + "; "
             temp = i["authname"]
+            if(len(author_name_list) != 0):
+                author_name_list = author_name_list +', '
+            author_name_list = author_name_list+temp
+
             afidlist = i["afid"]
             for j in afidlist: 
                 afid = j["$"]
-            author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
-            if(len(author_name_list) != 0):
-                author_name_list = author_name_list +', '
-            author_name_list = author_name_list+temp  
+                author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
+            
             if author[i]==0:
                 first_author_affiliation = affliationDict[afid]   
             if author[i]==len(author)-1:
