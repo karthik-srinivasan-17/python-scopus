@@ -137,6 +137,8 @@ def _parse_citation(js_citation, year_range):
 def _parse_affiliation(js_affiliation):
     affString =""
     affdict={}
+    print("js_affiliation")
+    print(js_affiliation)
     for js_affil in js_affiliation:
         l = ""
         if len(affString) != 0:
@@ -262,34 +264,24 @@ def _parse_article(entry):
         last_author_affiliation=""
         print("affliationDict")
         print(affliationDict)
-        print("author")
-        print(author)
         for i in author:
+            print("Each Author")
+            print(i)
             if len(author_with_affliation_string) != 0:
                 author_with_affliation_string = author_with_affliation_string + "; "
             temp = i["authname"]
-            print("authname")
-            print(temp)
             if(len(author_name_list) != 0):
                 author_name_list = author_name_list +', '
             author_name_list = author_name_list+temp
 
             afidlist = i["afid"]
-            print("afid List")
-            print(afidlist)
             for j in afidlist: 
                 afid = j["$"]
-                print("afid ")
-                print(afid)
                 author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
             
             if author.index(i)==0:
-                print("Index ")
-                print(author.index(i))
                 first_author_affiliation = affliationDict[afid]   
             if author.index(i)==len(author)-1:
-                print("Index ")
-                print(author.index(i))
                 last_author_affiliation = affliationDict[afid]  
     except:
         author_name_list = None
