@@ -266,9 +266,16 @@ def _parse_article(entry):
             if(len(author_name_list) != 0):
                 author_name_list = author_name_list +', '
             author_name_list = author_name_list+temp  
+            if i==0:
+                first_author_affiliation = affliationDict[afid]   
+            if i==len(author)-1:
+                last_author_affiliation = affliationDict[afid]  
     except:
         author_name_list = None
         author_with_affliation_string = None
+        first_author_affiliation = None
+        last_author_affiliation = None
+
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
