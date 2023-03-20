@@ -408,7 +408,7 @@ def _parse_article(entry):
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
              'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc,\
-            'full_text': full_text_link})
+            'full_text': full_text_link, "First_Author":first_author_affiliation, "Last_Author": last_author_affiliation})
 
 def _parse_entry(entry, type_):
     if type_ == 1 or type_ == 'article':
