@@ -246,6 +246,10 @@ def _parse_author(entry):
             'affiliation': institution_name, 'affiliation_id': institution_id})
 
 def _parse_article(entry):
+
+    nceh_affiliations=["NCEH", "National Center for Environmental Health", "ATSDR", "Agency for Toxic Substances and Disease Registry", "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  "Division of Environmental Hazards and Health Effects"]
+
+    cdc_only=["CDC", "Centers for Disease Control"]
     try:
         affiliation, affliationDict = _parse_affiliation(entry['affiliation'])
     except:
@@ -255,6 +259,8 @@ def _parse_article(entry):
         author = sorted(author,key=lambda i:i["@seq"])
         author_name_list = ""
         author_with_affliation_string = ""
+        first_author_affiliation=""
+        last_author_affiliation=""
         for i in author:
             if len(author_with_affliation_string) != 0:
                 author_with_affliation_string = author_with_affliation_string + "; "
@@ -275,7 +281,15 @@ def _parse_article(entry):
         author_with_affliation_string = None
         first_author_affiliation = None
         last_author_affiliation = None
-
+    try:
+        if first_author_affiliation in nceh_affiliations:
+            NCEH_ATSDR_FIRST = "Yes"
+        elif first_author_affiliation in cdc_only:
+            NCEH_ATSDR_FIRST ="TBD"
+        else:
+            NCEH_ATSDR_FIRST = "No"
+    except:
+        NCEH_ATSDR_FIRST = None
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
@@ -408,7 +422,8 @@ def _parse_article(entry):
             'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
              'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc,\
-            'full_text': full_text_link, "First_Author":first_author_affiliation, "Last_Author": last_author_affiliation})
+            'full_text': full_text_link, "First_Author":first_author_affiliation, "Last_Author": last_author_affiliation,\
+            'NCEH_ATSDR_FIRST': NCEH_ATSDR_FIRST})
 
 def _parse_entry(entry, type_):
     if type_ == 1 or type_ == 'article':
