@@ -248,9 +248,21 @@ def _parse_author(entry):
 
 def _parse_article(entry):
 
-    nceh_affiliations=["NCEH", "National Center for Environmental Health", "ATSDR", "Agency for Toxic Substances and Disease Registry", "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  "Division of Environmental Hazards and Health Effects"]
+    nceh_affiliations=["NCEH", "National Center for Environmental Health", 
+                       "ATSDR", "Agency for Toxic Substances and Disease Registry", 
+                       "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
+                       "Division of Environmental Hazards and Health Effects"]
 
     cdc_only=["CDC", "Centers for Disease Control"]
+    DEHSP_Div =["Division of Environmental Health Science and Practice",
+                "Division of Emergency and Environmental Health Sciences", 
+                "Division of Environmental Hazards and Health Effects"]
+    DLS_Div=["Division of Laboratory Sciences"]
+    ATSDR_Div=["Division of Community Health Investigations", 
+               "Division of Toxicology Human Health Sciences", 
+               "Agency for Toxic Substances and Disease Registry", 
+               "Office of Capacity Development and Applied Prevention Science", 
+               "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
     try:
         affiliation, affliationDict = _parse_affiliation(entry['affiliation'])
     except:
@@ -298,6 +310,40 @@ def _parse_article(entry):
     except:
         NCEH_ATSDR_FIRST = None
     try:
+        if last_author_affiliation in nceh_affiliations:
+            NCEH_ATSDR_LAST = "Yes"
+        elif last_author_affiliation in cdc_only:
+            NCEH_ATSDR_LAST ="TBD"
+        else:
+            NCEH_ATSDR_LAST = "No"
+    except:
+        NCEH_ATSDR_LAST = None
+    ### Division of author
+    try:
+        if first_author_affiliation in DEHSP_Div:
+            FIRST_AUTHOR_DIVISION = "DEHSP"
+        elif first_author_affiliation in DLS_Div:
+            FIRST_AUTHOR_DIVISION ="DLS"
+        elif first_author_affiliation in ATSDR_Div:
+            FIRST_AUTHOR_DIVISION ="ATSDR"    
+        else:
+            FIRST_AUTHOR_DIVISION = "TBD"
+    except:
+        FIRST_AUTHOR_DIVISION = None
+
+    try:
+        if last_author_affiliation in DEHSP_Div:
+            LAST_AUTHOR_DIVISION = "DEHSP"
+        elif last_author_affiliation in DLS_Div:
+            LAST_AUTHOR_DIVISION ="DLS"
+        elif last_author_affiliation in ATSDR_Div:
+            LAST_AUTHOR_DIVISION ="ATSDR"    
+        else:
+            LAST_AUTHOR_DIVISION = "TBD"
+    except:
+        LAST_AUTHOR_DIVISION = None
+
+    try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
         scopus_id = None
@@ -339,20 +385,14 @@ def _parse_article(entry):
         volume = None
     try:
         pagerange = entry['prism:pageRange']
-    except:
-        pagerange = None
-    try:
         pageStart = pagerange.split('-')[0]
-    except:
-        pageStart = None
-    try:
         pageEnd = pagerange.split('-')[1]
-    except:
-        pageEnd = None
-    try:
         pageCount = int(pageEnd) - int(pageStart)
     except:
-        pageCount = None          
+        pagerange = None
+        pageStart = None
+        pageEnd = None
+        pageCount = None        
     try:
         coverdate = entry['prism:coverDate']
     except:
@@ -417,20 +457,23 @@ def _parse_article(entry):
 
     try:
         linkString = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
-        Link = urllib.parse.quote_plus(linkString)
+        Link = urllib.parse.urlencode(linkString)
     except:
         Link = None        
 
-    return pd.Series({'Link':Link,'author':author_name_list,'author-id': author_id_list,'pubmed_id':pubmed_id,'eid':eid,'art_no': art_no,'issue':issue, 'open_access':open_access,\
-            'page_start': pageStart, 'page_end': pageEnd, 'page_count':pageCount,'page_range': pagerange,\
-            'cover_date': coverdate, 'year':year,\
-            'scopus-id': scopus_id,"author_with_affliation":author_with_affliation_string,\
-            'title': title, 'publication_name':publicationname,\
-            'issn': issn, 'isbn': isbn, 'eissn': eissn, 'volume': volume,\
-             'doi': doi,'citation_count': citationcount, 'affiliation': affiliation,\
+    return pd.Series({'Link':Link,'Authors':author_name_list,'Authors_ID': author_id_list,'Pubmed_ID_Scopus':pubmed_id,\
+                      'EID':eid,'Art No': art_no,'Issue':issue, 'Access Type':open_access,\
+            'Page start': pageStart, 'Page end': pageEnd, 'Page count':pageCount,'page_range': pagerange,\
+            #'cover_date': coverdate, 'eissn': eissn,
+            'Year':year,\
+            'scopus-id': scopus_id,"Authors with affliations":author_with_affliation_string,\
+            'Scopus_Search_Title': title, 'publication_name':publicationname,\
+            'ISSN': issn, 'ISBN': isbn,  'Volume': volume,\
+             'DOI': doi,'citation_count': citationcount, 'Affiliations': affiliation,\
             'aggregation_type': aggregationtype, 'subtype_description': sub_dc,\
-            'full_text': full_text_link, "First_Author":first_author_affiliation, "Last_Author": last_author_affiliation,\
-            'NCEH_ATSDR_FIRST': NCEH_ATSDR_FIRST})
+            'full_text': full_text_link, "HT_NCEHATSDR_Lead":first_author_affiliation, "HT_NCEHATSDR_Senior": last_author_affiliation,\
+            'NCEH_ATSDR_FIRST': NCEH_ATSDR_FIRST,"NCEH_ATSDR_LAST": NCEH_ATSDR_LAST,\
+            'FIRST_AUTHOR_DIVISION':FIRST_AUTHOR_DIVISION,"LAST_AUTHOR_DIVISION":LAST_AUTHOR_DIVISION})
 
 def _parse_entry(entry, type_):
     if type_ == 1 or type_ == 'article':
@@ -511,12 +554,13 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
     # rename keys
-    abstract_dict['scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
-    abstract_dict['abstract'] = abstract_dict.pop('dc:description')
-    abstract_dict['title'] = abstract_dict.pop('dc:title')
-    abstract_dict['abbreviated-source-title'] = abbreviated_source_title
-    abstract_dict['coden'] = coden
-    abstract_dict['author_keywords'] = author_keywords
+    abstract_dict['Scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
+    abstract_dict['Abstract'] = abstract_dict.pop('dc:description')
+    abstract_dict['Abstract Retrieval Title'] = abstract_dict.pop('dc:title')
+    abstract_dict['Abbreviated Source Title'] = abbreviated_source_title
+    abstract_dict['CODEN'] = coden
+    abstract_dict['Author Keywords'] = author_keywords
+    abstract_dict['Source_Title'] = abstract_dict.pop('prism:publicationName')
     
 
     return abstract_dict
