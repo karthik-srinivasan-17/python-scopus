@@ -283,13 +283,13 @@ def _parse_article(entry):
                 print(afid)
                 author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
             
-            if author[i]==0:
+            if author.index(i)==0:
                 print("Index ")
-                print(author[i])
+                print(author.index(i))
                 first_author_affiliation = affliationDict[afid]   
-            if author[i]==len(author)-1:
+            if author.index(i)==len(author)-1:
                 print("Index ")
-                print(author[i])
+                print(author.index(i))
                 last_author_affiliation = affliationDict[afid]  
     except:
         author_name_list = None
