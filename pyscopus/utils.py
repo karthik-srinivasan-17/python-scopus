@@ -7,7 +7,7 @@ import requests
 import numpy as np
 import pandas as pd
 import urllib
-from requests.utils import requote_uri
+from urllib.parse import urlencode
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -389,7 +389,7 @@ def _parse_article(entry):
 
     try:
         linkString = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
-        Link = requote_uri(linkString)
+        Link = urlencode(linkString)
     except:
         Link = None        
 
