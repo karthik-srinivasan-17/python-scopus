@@ -543,7 +543,7 @@ def _parse_abstract_retrieval(abstract_entry):
     # coredata
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
-    """  author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
+    author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
     try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
@@ -637,7 +637,7 @@ def _parse_abstract_retrieval(abstract_entry):
             LAST_AUTHOR_DIVISION = "TBD"
     except:
         LAST_AUTHOR_DIVISION = None
- """
+
 
     try:
         abbreviated_source_title = source["sourcetitle-abbrev"]
@@ -672,7 +672,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['CODEN'] = coden
     abstract_dict['Author Keywords'] = author_keywords
     abstract_dict['Source_Title'] = abstract_dict.pop('prism:publicationName')
-    """ abstract_dict['Authors'] = author_name_str
+    abstract_dict['Authors'] = author_name_str
     abstract_dict['Affliations'] = affliation_name_str
     abstract_dict['Authors with affliations'] = author_with_affliation_str
     abstract_dict['HT_NCEHATSDR_Lead'] = first_author_affiliation
@@ -680,7 +680,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['NCEH_ATSDR_FIRST'] = NCEH_ATSDR_FIRST
     abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
     abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
-    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION """
+    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
     
 
