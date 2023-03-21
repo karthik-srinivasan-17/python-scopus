@@ -513,7 +513,7 @@ def _parse_author_retrieval(author_entry):
     return author_dict
 
 def _parse_abstract_retrieval(abstract_entry):
-    """ nceh_affiliations=["NCEH", "National Center for Environmental Health", 
+    nceh_affiliations=["NCEH", "National Center for Environmental Health", 
                        "ATSDR", "Agency for Toxic Substances and Disease Registry", 
                        "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
                        "Division of Environmental Hazards and Health Effects"]
@@ -533,18 +533,21 @@ def _parse_abstract_retrieval(abstract_entry):
     author_with_affliation_str=""
     first_author_affiliation=""
     last_author_affiliation=""
-    affdict={}"""
+    affdict={}
 
     resp = abstract_entry['abstracts-retrieval-response']
     
     # coredata
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
-    """ author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
+    author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
+    print("author_group_list :" + author_group_list)
     try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
+            print("afid :" + afid)
             affiliation_text = i["affliation"]["ce:source-text"]
+            print("affiliation_text :" + affiliation_text)
             affdict = {**affdict, afid: affiliation_text}
     except:
         affdict = None
@@ -553,7 +556,7 @@ def _parse_abstract_retrieval(abstract_entry):
     author_list = sorted(author_list,key=lambda i:i["@seq"])
     
     print("author_list : " + author_list)
-    try:
+    """ try:
         for i in author_list:
             print("index : " + author_list.index(i))
             temp_name = i["ce:indexed-name"]
