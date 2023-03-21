@@ -565,18 +565,24 @@ def _parse_abstract_retrieval(abstract_entry):
             affiliation_list = i["affiliation"]
             print(affiliation_list)
             temp_affliation_name = ""
-            for j in affiliation_list:
+            if(affiliation_list["@id"] is not None):
                 afid = j["@id"]
-                print(afid)
-                print(affdict[afid] )
-                if(len(affliation_name_str)!=0):
-                    affliation_name_str =affliation_name_str +", "
-                if(len(temp_affliation_name)!=0):
-                    temp_affliation_name = temp_affliation_name +", "    
-                temp_affliation_name =   temp_affliation_name + affdict[afid]    
-                affliation_name_str = affliation_name_str + affdict[afid]  
-            affliation_name_str = affliation_name_str + ";"
-            author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
+                temp_affliation_name =  affdict[afid]    
+                affliation_name_str = affliation_name_str + affdict[afid] + ";"
+                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
+            else:
+                for j in affiliation_list:
+                    afid = j["@id"]
+                    print(afid)
+                    print(affdict[afid] )
+                    if(len(affliation_name_str)!=0):
+                        affliation_name_str =affliation_name_str +", "
+                    if(len(temp_affliation_name)!=0):
+                        temp_affliation_name = temp_affliation_name +", "    
+                    temp_affliation_name =   temp_affliation_name + affdict[afid]    
+                    affliation_name_str = affliation_name_str + affdict[afid]  
+                affliation_name_str = affliation_name_str + ";"
+                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
             if author_list.index(i)==0:
                 first_author_affiliation = temp_affliation_name  
             if author_list.index(i)==len(author_list)-1:
