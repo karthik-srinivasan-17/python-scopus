@@ -542,7 +542,7 @@ def _parse_abstract_retrieval(abstract_entry):
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
     print("author_group_list :" + author_group_list)
-    try:
+    """ try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
             print("afid :" + afid)
@@ -550,7 +550,7 @@ def _parse_abstract_retrieval(abstract_entry):
             print("affiliation_text :" + affiliation_text)
             affdict = {**affdict, afid: affiliation_text}
     except:
-        affdict = None
+        affdict = None """
 
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
