@@ -535,17 +535,22 @@ def _parse_abstract_retrieval(abstract_entry):
     author_with_affliation_str=""
     first_author_affiliation=""
     last_author_affiliation=""
-
+    print("author_list : " + author_list)
     try:
         for i in author_list:
+            print("index : " + author_list.index(i))
             temp_name = i["ce:indexed-name"]
+            print("Author Name : " + temp_name)
             if(len(author_name_str)!=0):
                 author_name_str = author_name_str + ", "
             author_name_str = author_name_str + temp_name
             affiliation_list = i["affliation"]
+            print("affiliation_list : " + affiliation_list)
             temp_affliation_name = ""
             for j in affiliation_list:
                 afid = j["@id"]
+                print("afid : " + afid)
+                print("affdict[afid]  : " + affdict[afid] )
                 if(len(affliation_name_str)!=0):
                     affliation_name_str =affliation_name_str +", "
                 if(len(temp_affliation_name)!=0):
@@ -558,6 +563,8 @@ def _parse_abstract_retrieval(abstract_entry):
                 first_author_affiliation = temp_affliation_name  
             if author_list.index(i)==len(author_list)-1:
                 last_author_affiliation = temp_affliation_name
+        print("first_author_affiliation  : " + first_author_affiliation )
+        print("last_author_affiliation  : " + last_author_affiliation )
     except:
         affdict = None
         author_name_str =None
