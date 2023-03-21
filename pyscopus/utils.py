@@ -541,38 +541,34 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-    print("author_group_list :")
-    print(author_group_list)
+
     try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
-            print(afid)
             affiliation_text = i["affliation"]["ce:source-text"]
-            print(affiliation_text)
             affdict = {**affdict, afid: affiliation_text}
     except:
         affdict = None 
 
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
-
-    print("author_list")
-    print(author_list)
-    """ try:
+    
+    try:
         for i in author_list:
-            print("index : " + author_list.index(i))
+            print("index : ")
+            print(author_list.index(i))
             temp_name = i["ce:indexed-name"]
-            print("Author Name : " + temp_name)
+            print(temp_name)
             if(len(author_name_str)!=0):
                 author_name_str = author_name_str + ", "
             author_name_str = author_name_str + temp_name
             affiliation_list = i["affliation"]
-            print("affiliation_list : " + affiliation_list)
+            print(affiliation_list)
             temp_affliation_name = ""
             for j in affiliation_list:
                 afid = j["@id"]
-                print("afid : " + afid)
-                print("affdict[afid]  : " + affdict[afid] )
+                print(afid)
+                print(affdict[afid] )
                 if(len(affliation_name_str)!=0):
                     affliation_name_str =affliation_name_str +", "
                 if(len(temp_affliation_name)!=0):
@@ -585,8 +581,8 @@ def _parse_abstract_retrieval(abstract_entry):
                 first_author_affiliation = temp_affliation_name  
             if author_list.index(i)==len(author_list)-1:
                 last_author_affiliation = temp_affliation_name
-        print("first_author_affiliation  : " + first_author_affiliation )
-        print("last_author_affiliation  : " + last_author_affiliation )
+        print(first_author_affiliation )
+        print(last_author_affiliation )
     except:
         affdict = None
         author_name_str =None
@@ -638,7 +634,7 @@ def _parse_abstract_retrieval(abstract_entry):
         else:
             LAST_AUTHOR_DIVISION = "TBD"
     except:
-        LAST_AUTHOR_DIVISION = None """
+        LAST_AUTHOR_DIVISION = None 
 
 
     try:
@@ -674,7 +670,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['CODEN'] = coden
     abstract_dict['Author Keywords'] = author_keywords
     abstract_dict['Source_Title'] = abstract_dict.pop('prism:publicationName')
-    """ abstract_dict['Authors'] = author_name_str
+    abstract_dict['Authors'] = author_name_str
     abstract_dict['Affliations'] = affliation_name_str
     abstract_dict['Authors with affliations'] = author_with_affliation_str
     abstract_dict['HT_NCEHATSDR_Lead'] = first_author_affiliation
@@ -682,7 +678,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['NCEH_ATSDR_FIRST'] = NCEH_ATSDR_FIRST
     abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
     abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
-    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION  """
+    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
     
 
