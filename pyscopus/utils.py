@@ -544,12 +544,15 @@ def _parse_abstract_retrieval(abstract_entry):
 
     try:
         for i in author_group_list:
-            afid = i["affliation"]["affliation-id"]["@afid"]
-            affiliation_text = i["affliation"]["ce:source-text"]
+            afid = i["affiliation"]["affiliation-id"]["@afid"]
+            print(afid)
+            affiliation_text = i["affiliation"]["ce:source-text"]
+            print(affiliation_text)
             affdict = {**affdict, afid: affiliation_text}
     except:
         affdict = None 
 
+    print(affdict)
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
     print(author_list)
