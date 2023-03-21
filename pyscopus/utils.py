@@ -569,17 +569,7 @@ def _parse_abstract_retrieval(abstract_entry):
             affiliation_list = i["affiliation"]
             print(affiliation_list)
             temp_affliation_name = ""
-            if(affiliation_list["@id"] is not None):
-                print("Affiliation is not a list ")
-                afid = affiliation_list["@id"]
-                print(afid)
-                print(affdict[afid] )
-                temp_affliation_name =  affdict[afid]    
-                affliation_name_str = affliation_name_str + affdict[afid] + ";"
-                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
-                print(affliation_name_str)
-                print(author_with_affliation_str)
-            else:
+            if(isinstance(affiliation_list, list)):
                 print("Affiliation is  list ")
                 for j in affiliation_list:
                     afid = j["@id"]
@@ -599,6 +589,17 @@ def _parse_abstract_retrieval(abstract_entry):
                 author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
                 print(affliation_name_str)
                 print(author_with_affliation_str)
+            else:
+                print("Affiliation is not a list ")
+                afid = affiliation_list["@id"]
+                print(afid)
+                print(affdict[afid] )
+                temp_affliation_name =  affdict[afid]    
+                affliation_name_str = affliation_name_str + affdict[afid] + ";"
+                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
+                print(affliation_name_str)
+                print(author_with_affliation_str)
+ 
             if author_list.index(i)==0:
                 first_author_affiliation = temp_affliation_name
             if author_list.index(i)==len(author_list)-1:
