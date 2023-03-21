@@ -552,7 +552,7 @@ def _parse_abstract_retrieval(abstract_entry):
 
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
-    
+    print(author_list)
     try:
         for i in author_list:
             print("index : ")
@@ -562,7 +562,7 @@ def _parse_abstract_retrieval(abstract_entry):
             if(len(author_name_str)!=0):
                 author_name_str = author_name_str + ", "
             author_name_str = author_name_str + temp_name
-            affiliation_list = i["affliation"]
+            affiliation_list = i["affiliation"]
             print(affiliation_list)
             temp_affliation_name = ""
             for j in affiliation_list:
