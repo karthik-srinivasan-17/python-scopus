@@ -541,21 +541,23 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-    print("author_group_list :" + author_group_list)
-    """ try:
+    print("author_group_list :")
+    print(author_group_list)
+    try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
-            print("afid :" + afid)
+            print(afid)
             affiliation_text = i["affliation"]["ce:source-text"]
-            print("affiliation_text :" + affiliation_text)
+            print(affiliation_text)
             affdict = {**affdict, afid: affiliation_text}
     except:
-        affdict = None """
+        affdict = None 
 
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
-    
-    print("author_list : " + author_list)
+
+    print("author_list")
+    print(author_list)
     """ try:
         for i in author_list:
             print("index : " + author_list.index(i))
