@@ -566,7 +566,9 @@ def _parse_abstract_retrieval(abstract_entry):
             print(affiliation_list)
             temp_affliation_name = ""
             if(affiliation_list["@id"] is not None):
-                afid = j["@id"]
+                afid = affiliation_list["@id"]
+                print(afid)
+                print(affdict[afid] )
                 temp_affliation_name =  affdict[afid]    
                 affliation_name_str = affliation_name_str + affdict[afid] + ";"
                 author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
