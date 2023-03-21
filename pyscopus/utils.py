@@ -579,8 +579,9 @@ def _parse_abstract_retrieval(abstract_entry):
                         affliation_name_str =affliation_name_str +", "
                     if(len(temp_affliation_name)!=0):
                         temp_affliation_name = temp_affliation_name +", "
-                    print("Index  : " + i + " and  "+ j)
-                          
+                    print("Index  : ")
+                    print (i)
+                    print (j)     
                     temp_affliation_name =   temp_affliation_name + affdict[afid]    
                     affliation_name_str = affliation_name_str + affdict[afid]
                     print(temp_affliation_name)
@@ -594,7 +595,7 @@ def _parse_abstract_retrieval(abstract_entry):
                 afid = affiliation_list["@id"]
                 print(afid)
                 print(affdict[afid] )
-                temp_affliation_name =  affdict[afid]    
+                temp_affliation_name =   temp_affliation_name + affdict[afid]   
                 affliation_name_str = affliation_name_str + affdict[afid] + ";"
                 author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
                 print(affliation_name_str)
