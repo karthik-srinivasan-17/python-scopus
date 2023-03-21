@@ -3,10 +3,10 @@
     Helper Functions
 '''
 
-
+import requests
 import numpy as np
 import pandas as pd
-
+import urllib.parse
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
