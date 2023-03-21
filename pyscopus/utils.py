@@ -545,7 +545,7 @@ def _parse_abstract_retrieval(abstract_entry):
 
     try:
         for i in author_group_list:
-            afid = i["affiliation"]["affiliation-id"]["@afid"]
+            afid = i["affiliation"]["@afid"]
             print(afid)
             affiliation_text = i["affiliation"]["ce:source-text"]
             print(affiliation_text)
