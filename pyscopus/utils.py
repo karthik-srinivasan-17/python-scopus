@@ -513,13 +513,37 @@ def _parse_author_retrieval(author_entry):
     return author_dict
 
 def _parse_abstract_retrieval(abstract_entry):
+
     
-    resp = abstract_entry['abstracts-retrieval-response']
+    nceh_affiliations=["NCEH", "National Center for Environmental Health", 
+                       "ATSDR", "Agency for Toxic Substances and Disease Registry", 
+                       "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
+                       "Division of Environmental Hazards and Health Effects"]
+
+    cdc_only=["CDC", "Centers for Disease Control"]
+    DEHSP_Div =["Division of Environmental Health Science and Practice",
+                "Division of Emergency and Environmental Health Sciences", 
+                "Division of Environmental Hazards and Health Effects"]
+    DLS_Div=["Division of Laboratory Sciences"]
+    ATSDR_Div=["Division of Community Health Investigations", 
+               "Division of Toxicology Human Health Sciences", 
+               "Agency for Toxic Substances and Disease Registry", 
+               "Office of Capacity Development and Applied Prevention Science", 
+               "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
+    author_name_str =""
+    affliation_name_str=""
+    author_with_affliation_str=""
+    first_author_affiliation=""
+    last_author_affiliation=""
     affdict={}
+
+
+    resp = abstract_entry['abstracts-retrieval-response']
+    
     # coredata
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
-    author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
+    """  author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
     try:
         for i in author_group_list:
             afid = i["affliation"]["affliation-id"]["@afid"]
@@ -530,11 +554,7 @@ def _parse_abstract_retrieval(abstract_entry):
 
     author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
-    author_name_str =""
-    affliation_name_str=""
-    author_with_affliation_str=""
-    first_author_affiliation=""
-    last_author_affiliation=""
+    
     print("author_list : " + author_list)
     try:
         for i in author_list:
@@ -574,21 +594,6 @@ def _parse_abstract_retrieval(abstract_entry):
         last_author_affiliation = None
 
 
-    nceh_affiliations=["NCEH", "National Center for Environmental Health", 
-                       "ATSDR", "Agency for Toxic Substances and Disease Registry", 
-                       "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
-                       "Division of Environmental Hazards and Health Effects"]
-
-    cdc_only=["CDC", "Centers for Disease Control"]
-    DEHSP_Div =["Division of Environmental Health Science and Practice",
-                "Division of Emergency and Environmental Health Sciences", 
-                "Division of Environmental Hazards and Health Effects"]
-    DLS_Div=["Division of Laboratory Sciences"]
-    ATSDR_Div=["Division of Community Health Investigations", 
-               "Division of Toxicology Human Health Sciences", 
-               "Agency for Toxic Substances and Disease Registry", 
-               "Office of Capacity Development and Applied Prevention Science", 
-               "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
  
     try:
         if first_author_affiliation in nceh_affiliations:
@@ -632,7 +637,7 @@ def _parse_abstract_retrieval(abstract_entry):
             LAST_AUTHOR_DIVISION = "TBD"
     except:
         LAST_AUTHOR_DIVISION = None
-
+ """
 
     try:
         abbreviated_source_title = source["sourcetitle-abbrev"]
@@ -667,7 +672,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['CODEN'] = coden
     abstract_dict['Author Keywords'] = author_keywords
     abstract_dict['Source_Title'] = abstract_dict.pop('prism:publicationName')
-    abstract_dict['Authors'] = author_name_str
+    """ abstract_dict['Authors'] = author_name_str
     abstract_dict['Affliations'] = affliation_name_str
     abstract_dict['Authors with affliations'] = author_with_affliation_str
     abstract_dict['HT_NCEHATSDR_Lead'] = first_author_affiliation
@@ -675,7 +680,7 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['NCEH_ATSDR_FIRST'] = NCEH_ATSDR_FIRST
     abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
     abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
-    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION
+    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION """
 
     
 
