@@ -543,8 +543,7 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-    print(author_group_list)
-
+  
     try:
         for i in author_group_list:
             affiliation_text = i["affiliation"]["ce:source-text"]
@@ -572,6 +571,33 @@ def _parse_abstract_retrieval(abstract_entry):
     print("After sorting")
     print(affiliationdict)
     print(authordict)
+
+    if (len(authordict) != len(affiliationdict)):
+        print("There is mismatch between author and affliation group")
+
+    try:
+        k = 1
+        while k <= len(authordict):
+            if(len(author_name_str)!=0):
+                    author_name_str = author_name_str + ", "
+            author_name_str = author_name_str + authordict[k]
+            if(len(affliation_name_str)!=0):
+                    affliation_name_str =affliation_name_str +"; "
+            affliation_name_str = affliation_name_str + affiliationdict[k]
+            if(len(author_with_affliation_str)!=0):
+                    author_with_affliation_str =author_with_affliation_str +"; "        
+            author_with_affliation_str = author_with_affliation_str + authordict[k] +", "+affiliationdict[k]
+            if k==1:
+                first_author_affiliation = affiliationdict[k]
+            if k==len(authordict):
+                last_author_affiliation = affiliationdict[k]
+    except:
+        author_name_str =None
+        affliation_name_str=None
+        author_with_affliation_str=None
+        first_author_affiliation = None
+        last_author_affiliation = None 
+
 
     """ author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
