@@ -536,7 +536,7 @@ def _parse_abstract_retrieval(abstract_entry):
     last_author_affiliation=""
     affiliationdict={}
     authordict={}
-    affliation_name_list={}
+    affliation_name_list=[]
 
     resp = abstract_entry['abstracts-retrieval-response']
     
