@@ -619,9 +619,10 @@ def _parse_abstract_retrieval(abstract_entry):
     print("Before removing the duplicates")
     print(affliation_name_list)   
     affliation_name_list = set(affliation_name_list)
+    affliation_name_list = list(reversed(affliation_name_list))
     print("After removing the duplicates")
     print(affliation_name_list)   
-
+    affliation_name_list = list(affliation_name_list)[::-1]
     affliation_name_str = ', '.join(affliation_name_list)
     print(affliation_name_str) 
 
