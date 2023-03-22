@@ -582,12 +582,12 @@ def _parse_abstract_retrieval(abstract_entry):
             print(k)
             if(len(author_name_str)!=0):
                     author_name_str = author_name_str + ", "
-            author_name_str = author_name_str + authordict[k]
-            print(authordict[k])
+            author_name_str = author_name_str + authordict[str(k)]
+            print(authordict[str(k)])
             if(len(affliation_name_str)!=0):
                     affliation_name_str =affliation_name_str +"; "
-            affliation_name_str = affliation_name_str + affiliationdict[k]
-            print(affiliationdict[k])
+            affliation_name_str = affliation_name_str + affiliationdict[str(k)]
+            print(affiliationdict[str(k)])
             if(len(author_with_affliation_str)!=0):
                     author_with_affliation_str =author_with_affliation_str +"; "        
             author_with_affliation_str = author_with_affliation_str + authordict[k] +", "+affiliationdict[k]
