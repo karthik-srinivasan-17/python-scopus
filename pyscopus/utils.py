@@ -536,6 +536,7 @@ def _parse_abstract_retrieval(abstract_entry):
     last_author_affiliation=""
     affiliationdict={}
     authordict={}
+    affliation_name_list={}
 
     resp = abstract_entry['abstracts-retrieval-response']
     
@@ -591,9 +592,10 @@ def _parse_abstract_retrieval(abstract_entry):
                     author_name_str = author_name_str + ", "
             author_name_str = author_name_str + authordict[str(k)]
             print(authordict[str(k)])
-            if(len(affliation_name_str)!=0):
-                    affliation_name_str =affliation_name_str +"; "
-            affliation_name_str = affliation_name_str + ', '.join(affiliationdict[str(k)])
+            affliation_name_list.extend(affiliationdict[str(k)])
+            #if(len(affliation_name_str)!=0):
+                    #affliation_name_str =affliation_name_str +"; "
+            #affliation_name_str = affliation_name_str + ', '.join(affiliationdict[str(k)])
             print(affiliationdict[str(k)])
             if(len(author_with_affliation_str)!=0):
                     author_with_affliation_str =author_with_affliation_str +"; "        
@@ -611,8 +613,17 @@ def _parse_abstract_retrieval(abstract_entry):
         last_author_affiliation = None 
 
     print(author_name_str)
-    print(affliation_name_str)   
-    print(author_with_affliation_str)      
+    
+    print(author_with_affliation_str) 
+
+    print("Before removing the duplicates")
+    print(affliation_name_list)   
+    affliation_name_list = set(affliation_name_list)
+    print("After removing the duplicates")
+    print(affliation_name_list)   
+
+    affliation_name_str = ', '.join(affliation_name_list)
+    print(affliation_name_str) 
 
 
     """ author_list = resp['authors']["author"]
