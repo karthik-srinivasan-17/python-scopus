@@ -552,11 +552,18 @@ def _parse_abstract_retrieval(abstract_entry):
             for j in author_list:
                 seqid = j["@seq"]
                 author_text = j["ce:indexed-name"]
+
                 print(seqid)
                 print(author_text)
                 print(affiliation_text)
-                affiliationdict = {**affiliationdict, seqid: affiliation_text}
                 authordict = {**authordict, seqid: author_text}
+                if seqid in affiliationdict:
+                    templist = affiliationdict[seqid]
+                    templist.append(affiliation_text)
+                    affiliationdict[seqid] = templist
+                else:
+                    affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+                
 
     except:
         affiliationdict = None
@@ -590,7 +597,7 @@ def _parse_abstract_retrieval(abstract_entry):
             print(affiliationdict[str(k)])
             if(len(author_with_affliation_str)!=0):
                     author_with_affliation_str =author_with_affliation_str +"; "        
-            author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+affiliationdict[str(k)]
+            author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
             if k==1:
                 first_author_affiliation = affiliationdict[str(k)]
             if k==len(authordict):
