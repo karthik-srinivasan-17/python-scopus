@@ -7,6 +7,7 @@ import requests
 import numpy as np
 import pandas as pd
 import urllib.parse
+import collections
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -533,7 +534,8 @@ def _parse_abstract_retrieval(abstract_entry):
     author_with_affliation_str=""
     first_author_affiliation=""
     last_author_affiliation=""
-    affdict={}
+    affiliationdict={}
+    authordict={}
 
     resp = abstract_entry['abstracts-retrieval-response']
     
@@ -545,16 +547,33 @@ def _parse_abstract_retrieval(abstract_entry):
 
     try:
         for i in author_group_list:
-            afid = i["affiliation"]["@afid"]
-            print(afid)
             affiliation_text = i["affiliation"]["ce:source-text"]
-            print(affiliation_text)
-            affdict = {**affdict, afid: affiliation_text}
-    except:
-        affdict = None 
+            author_list = i["author"]
+            print(type(author_list))
+            for j in author_list:
+                seqid = j["@seq"]
+                author_text = j["ce:indexed-name"]
+                print(seqid)
+                print(author_text)
+                print(affiliation_text)
+                affiliationdict = {**affiliationdict, seqid: affiliation_text}
+                authordict = {**authordict, seqid: author_text}
 
-    print(affdict)
-    author_list = resp['authors']["author"]
+    except:
+        affiliationdict = None
+        authordict = None 
+
+
+    print("Before sorting")
+    print(affiliationdict)
+    print(authordict)
+    affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
+    authordict = collections.OrderedDict(sorted(authordict.items()))
+    print("After sorting")
+    print(affiliationdict)
+    print(authordict)
+
+    """ author_list = resp['authors']["author"]
     author_list = sorted(author_list,key=lambda i:i["@seq"])
     print(author_list)
     try:
@@ -580,8 +599,7 @@ def _parse_abstract_retrieval(abstract_entry):
                     if(len(temp_affliation_name)!=0):
                         temp_affliation_name = temp_affliation_name +", "
                     print("Index  : ")
-                    print (i)
-                    print (j)     
+  
                     temp_affliation_name =   temp_affliation_name + affdict[afid]    
                     affliation_name_str = affliation_name_str + affdict[afid]
                     print(temp_affliation_name)
@@ -613,7 +631,7 @@ def _parse_abstract_retrieval(abstract_entry):
         affliation_name_str=None
         author_with_affliation_str=None
         first_author_affiliation = None
-        last_author_affiliation = None
+        last_author_affiliation = None """
 
 
  
