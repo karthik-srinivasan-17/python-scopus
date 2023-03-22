@@ -544,27 +544,47 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-  
+    print("author_group_list type")
+    print(type(author_group_list))
     try:
-        for i in author_group_list:
-            affiliation_text = i["affiliation"]["ce:source-text"]
-            author_list = i["author"]
+        if(isinstance(author_group_list, list)): 
+            for i in author_group_list:
+                affiliation_text = i["affiliation"]["ce:source-text"]
+                author_list = i["author"]
+                print(type(author_list))
+                for j in author_list:
+                    seqid = j["@seq"]
+                    author_text = j["ce:indexed-name"]
+
+                    print(seqid)
+                    print(author_text)
+                    print(affiliation_text)
+                    authordict = {**authordict, seqid: author_text}
+                    if seqid in affiliationdict:
+                        templist = affiliationdict[seqid]
+                        templist.append(affiliation_text)
+                        affiliationdict[seqid] = templist
+                    else:
+                        affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+        else:
+            affiliation_text = author_group_list["affiliation"]["ce:source-text"]
+            author_list = author_group_list["author"]
             print(type(author_list))
             for j in author_list:
-                seqid = j["@seq"]
-                author_text = j["ce:indexed-name"]
-
-                print(seqid)
-                print(author_text)
-                print(affiliation_text)
-                authordict = {**authordict, seqid: author_text}
-                if seqid in affiliationdict:
-                    templist = affiliationdict[seqid]
-                    templist.append(affiliation_text)
-                    affiliationdict[seqid] = templist
-                else:
-                    affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
-                
+                    seqid = j["@seq"]
+                    author_text = j["ce:indexed-name"]
+                    print(seqid)
+                    print(author_text)
+                    print(affiliation_text)
+                    authordict = {**authordict, seqid: author_text}
+                    if seqid in affiliationdict:
+                        templist = affiliationdict[seqid]
+                        templist.append(affiliation_text)
+                        affiliationdict[seqid] = templist
+                    else:
+                        affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+            
+                    
 
     except:
         affiliationdict = None
