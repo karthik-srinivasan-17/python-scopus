@@ -578,6 +578,8 @@ def _parse_abstract_retrieval(abstract_entry):
     try:
         k = 1
         while k <= len(authordict):
+            print("K value is ")
+            print(k)
             if(len(author_name_str)!=0):
                     author_name_str = author_name_str + ", "
             author_name_str = author_name_str + authordict[k]
@@ -598,6 +600,10 @@ def _parse_abstract_retrieval(abstract_entry):
         author_with_affliation_str=None
         first_author_affiliation = None
         last_author_affiliation = None 
+
+    print(author_name_str)
+    print(affliation_name_str)   
+    print(author_with_affliation_str)      
 
 
     """ author_list = resp['authors']["author"]
