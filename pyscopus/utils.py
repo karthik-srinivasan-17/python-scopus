@@ -591,6 +591,7 @@ def _parse_abstract_retrieval(abstract_entry):
                 first_author_affiliation = affiliationdict[k]
             if k==len(authordict):
                 last_author_affiliation = affiliationdict[k]
+            k+=1
     except:
         author_name_str =None
         affliation_name_str=None
