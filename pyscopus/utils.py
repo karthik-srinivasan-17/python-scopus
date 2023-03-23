@@ -9,6 +9,7 @@ import pandas as pd
 import urllib.parse
 import collections
 import json
+import traceback
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -647,23 +648,24 @@ def _parse_abstract_retrieval(abstract_entry):
 
     except Exception as e: 
         print(e)
+        traceback.print_exc()
         print("Exception happened")
-        print("author_group_list type")
-        print(type(author_group_list))
-        print("author_group_list")
-        print(author_group_list)
-        #print("organization")
-        #print(organization)
-        print("affiliation_text")
-        #print(affiliation_text)
-        print("author_list type")
-        #print(type(author_list))
-        print("author_list")
-        #print(author_list)
-        print("affiliationdict")
-        print(affiliationdict)
-        print("authordict")
-        print(authordict)
+        # print("author_group_list type")
+        # print(type(author_group_list))
+        # print("author_group_list")
+        # print(author_group_list)
+        # #print("organization")
+        # #print(organization)
+        # print("affiliation_text")
+        # #print(affiliation_text)
+        # print("author_list type")
+        # #print(type(author_list))
+        # print("author_list")
+        # #print(author_list)
+        # print("affiliationdict")
+        # print(affiliationdict)
+        # print("authordict")
+        # print(authordict)
         affiliationdict = None
         authordict = None
         author_name_str =None
@@ -682,11 +684,12 @@ def _parse_abstract_retrieval(abstract_entry):
             authordict = collections.OrderedDict(sorted(authordict.items()))
     except Exception as e:
         print(e)
-        print("Sorting failed")
-        print("affiliationdict")
-        print(affiliationdict)
-        print("authordict")
-        print(authordict)
+        traceback.print_exc()
+        # print("Sorting failed")
+        # print("affiliationdict")
+        # print(affiliationdict)
+        # print("authordict")
+        # print(authordict)
         affiliationdict = None
         authordict = None 
     
@@ -714,15 +717,16 @@ def _parse_abstract_retrieval(abstract_entry):
                 k=k+1
         except Exception as e:
             print(e)
-            print("Exception Happened while creating author, affiliation and author with affiliation")
-            print(" K value")
-            print(k)
-            print("author_name_str")
-            print (author_name_str)
-            print("affliation_name_list")
-            print (affliation_name_list)
-            print("author_with_affliation_str")
-            print (author_with_affliation_str)
+            traceback.print_exc()
+            # print("Exception Happened while creating author, affiliation and author with affiliation")
+            # print(" K value")
+            # print(k)
+            # print("author_name_str")
+            # print (author_name_str)
+            # print("affliation_name_list")
+            # print (affliation_name_list)
+            # print("author_with_affliation_str")
+            # print (author_with_affliation_str)
 
             author_name_str =None
             affliation_name_str=None
@@ -735,10 +739,11 @@ def _parse_abstract_retrieval(abstract_entry):
             affliation_name_str = ', '.join(affliation_name_list)
         except Exception as e:
             print(e)
-            print("affliation_name_list")
-            print(affliation_name_list)
-            print("affliation_name_str")
-            print(affliation_name_str) 
+            traceback.print_exc()
+            # print("affliation_name_list")
+            # print(affliation_name_list)
+            # print("affliation_name_str")
+            # print(affliation_name_str) 
 
     #print(author_name_str)
     
