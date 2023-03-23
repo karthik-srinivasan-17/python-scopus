@@ -515,7 +515,7 @@ def _parse_author_retrieval(author_entry):
 
     return author_dict
 
-def _parse_affiliation_from_authorgroup(affiliation):
+async def _parse_affiliation_from_authorgroup(affiliation):
     affiliation_text = ""
     if "organization" in affiliation:                
             organization = affiliation["organization"]
@@ -539,7 +539,7 @@ def _parse_affiliation_from_authorgroup(affiliation):
     return affiliation_text
 
 
-def _parse_abstract_retrieval(abstract_entry):
+async def _parse_abstract_retrieval(abstract_entry):
     nceh_affiliations=["NCEH", "National Center for Environmental Health", 
                        "ATSDR", "Agency for Toxic Substances and Disease Registry", 
                        "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
