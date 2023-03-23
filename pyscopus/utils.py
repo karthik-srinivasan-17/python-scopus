@@ -578,10 +578,8 @@ def _parse_abstract_retrieval(abstract_entry):
                     affiliation = i["affiliation"]
                     affiliation_text = ""
                     if "ce:source-text" in affiliation:
-                        print ("ce source text is present")
                         affiliation_text = affiliation["ce:source-text"]
                     else:
-                        print ("ce source text is not present")
                         #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
@@ -634,10 +632,8 @@ def _parse_abstract_retrieval(abstract_entry):
                 affiliation = author_group_list["affiliation"]
                 affiliation_text = " "
                 if "ce:source-text" in affiliation:
-                        print ("ce source text is present")
                         affiliation_text = affiliation["ce:source-text"]
                 else:
-                        print ("ce source text is not present")
                         #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
