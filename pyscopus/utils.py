@@ -898,6 +898,7 @@ def _parse_abstract_retrieval(abstract_entry):
         print("citationInfo")
         print(resp["item"]["bibrecord"]["head"]["citation-info"])
         print(e)
+        traceback.print_exc()
         # print("authorKeywordsList")
         # print (authorKeywordsList)
         # print(" type of authorKeywordsList")
