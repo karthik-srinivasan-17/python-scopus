@@ -575,6 +575,7 @@ def _parse_abstract_retrieval(abstract_entry):
         if(isinstance(author_group_list, list)): 
             for i in author_group_list:
                 affiliation = i["affiliation"]
+                affiliation_text = ""
                 if "ce:source-text" in affiliation:
                     print ("ce source text is present")
                     affiliation_text = affiliation["ce:source-text"]
@@ -627,6 +628,7 @@ def _parse_abstract_retrieval(abstract_entry):
 
         else:
             affiliation = author_group_list["affiliation"]
+            affiliation_text = ""
             if "ce:source-text" in affiliation:
                     print ("ce source text is present")
                     affiliation_text = affiliation["ce:source-text"]
