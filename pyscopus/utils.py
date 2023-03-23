@@ -553,7 +553,7 @@ def _parse_abstract_retrieval(abstract_entry):
             for i in author_group_list:
                 affiliation_text = i["affiliation"]["ce:source-text"]
                 if affiliation_text is None:
-                    organization = i["organization"]
+                    organization = i["affiliation"]["organization"]
                     if organization is not None:
                         if(isinstance(organization, list)):
                             for l in organization:
