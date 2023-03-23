@@ -550,7 +550,12 @@ def _parse_abstract_retrieval(abstract_entry):
     try:
         if(isinstance(author_group_list, list)): 
             for i in author_group_list:
-                affiliation_text = i["affiliation"]["ce:source-text"]
+                affiliation = i["affiliation"]
+                if "ce:source-text" in affiliation:
+                    print ("ce source text is present")
+                else:
+                    print ("ce source text is not present")
+                affiliation_text = affiliation["ce:source-text"]
                 if affiliation_text is None:
                     print("author_group_list is a list ")
                     print("affiliation_text is None ")
@@ -597,7 +602,12 @@ def _parse_abstract_retrieval(abstract_entry):
 
 
         else:
-            affiliation_text = author_group_list["affiliation"]["ce:source-text"]
+            affiliation = author_group_list["affiliation"]
+            if "ce:source-text" in affiliation:
+                    print ("ce source text is present")
+            else:
+                    print ("ce source text is not present")
+            affiliation_text = affiliation["ce:source-text"]        
             if affiliation_text is None:
                     print("author_group_list is Not a  list ")
                     print("type of author_group_list")
@@ -877,9 +887,10 @@ def _parse_abstract_retrieval(abstract_entry):
         coden = None    
 
     try:
-        author_keywords = ""
+        author_keywords = None
         #authorKeywordsList = ""
-        authorKeywords = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]
+        citation_info = resp["item"]["bibrecord"]["head"]["citation-info"]
+        authorKeywords = citation_info["author-keywords"]
         if authorKeywords is not None:
             authorKeywordsList = authorKeywords["author-keyword"]
             if authorKeywordsList is not None:
