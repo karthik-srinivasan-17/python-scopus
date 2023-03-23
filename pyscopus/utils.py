@@ -515,6 +515,27 @@ def _parse_author_retrieval(author_entry):
 
     return author_dict
 
+def _parse_affiliation_from_authorgroup(affiliation):
+    affiliation_text = ""
+    if "organization" in affiliation:                
+            organization = affiliation["organization"]
+            if(isinstance(organization, list)):
+                    for l in organization:
+                        tempOrgName = l["$"]
+                        if(len(affiliation_text)!=0):
+                            affiliation_text =affiliation_text +", "   
+                            affiliation_text = affiliation_text + tempOrgName
+            else:
+                    affiliation_text = organization["$"]
+            country = affiliation["country"]
+            postalcode = affiliation["postal-code"]
+            city = affiliation["city"]
+            affiliation_text = affiliation_text + city +", "+ postalcode +", "+country       
+    else:
+            affiliation_text = "Affiliation Info not available from scoupus API"
+    return affiliation_text
+
+
 def _parse_abstract_retrieval(abstract_entry):
     nceh_affiliations=["NCEH", "National Center for Environmental Health", 
                        "ATSDR", "Agency for Toxic Substances and Disease Registry", 
@@ -553,29 +574,11 @@ def _parse_abstract_retrieval(abstract_entry):
                 affiliation = i["affiliation"]
                 if "ce:source-text" in affiliation:
                     print ("ce source text is present")
+                    affiliation_text = affiliation["ce:source-text"]
                 else:
                     print ("ce source text is not present")
-                affiliation_text = affiliation["ce:source-text"]
-                if affiliation_text is None:
-                    print("author_group_list is a list ")
-                    print("affiliation_text is None ")
-                    organization = i["affiliation"]["organization"]
-                    print("organization element ")
-                    #print(organization)
-                    if organization is not None:
-                        if(isinstance(organization, list)):
-                            for l in organization:
-                                tempOrgName = l["$"]
-                                if(len(affiliation_text)!=0):
-                                     affiliation_text =affiliation_text +", "   
-                                affiliation_text = affiliation_text + tempOrgName
-                        else:
-                                affiliation_text = organization["$"]    
-                    else:
-                        affiliation_text = "Affiliation Info not available from scoupus API" 
-                    
+                    affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
 
-              
                 author_list = i["author"]
 
                 if(isinstance(author_list, list)):
@@ -605,29 +608,10 @@ def _parse_abstract_retrieval(abstract_entry):
             affiliation = author_group_list["affiliation"]
             if "ce:source-text" in affiliation:
                     print ("ce source text is present")
+                    affiliation_text = affiliation["ce:source-text"]
             else:
                     print ("ce source text is not present")
-            affiliation_text = affiliation["ce:source-text"]        
-            if affiliation_text is None:
-                    print("author_group_list is Not a  list ")
-                    print("type of author_group_list")
-                    print(type(author_group_list))
-                    print(isinstance(author_group_list, list))
-                    organization = author_group_list["affiliation"]["organization"]
-                    print("affiliation_text is None ")
-                    print("organization element ")
-                    #print(organization)
-                    if organization is not None:
-                        if(isinstance(organization, list)):
-                            for l in organization:
-                                tempOrgName = l["$"]
-                                if(len(affiliation_text)!=0):
-                                     affiliation_text =affiliation_text +", "   
-                                affiliation_text = affiliation_text + tempOrgName
-                        else:
-                                affiliation_text = organization["$"]    
-                    else:
-                        affiliation_text = "Affiliation Info not available from scoupus API"
+                    affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
       
             author_list = author_group_list["author"]
  
@@ -660,22 +644,7 @@ def _parse_abstract_retrieval(abstract_entry):
         print(e)
         traceback.print_exc()
         print("Exception happened")
-        # print("author_group_list type")
-        # print(type(author_group_list))
-        # print("author_group_list")
-        # print(author_group_list)
-        # #print("organization")
-        # #print(organization)
-        # print("affiliation_text")
-        # #print(affiliation_text)
-        # print("author_list type")
-        # #print(type(author_list))
-        # print("author_list")
-        # #print(author_list)
-        # print("affiliationdict")
-        # print(affiliationdict)
-        # print("authordict")
-        # print(authordict)
+      
         affiliationdict = None
         authordict = None
         author_name_str =None
@@ -684,10 +653,6 @@ def _parse_abstract_retrieval(abstract_entry):
         first_author_affiliation = None
         last_author_affiliation = None  
 
-
-    #print("Before sorting")
-    #print(affiliationdict)
-    #print(authordict)
     try:
         if(affiliationdict is not None and authordict is not None):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
@@ -695,17 +660,10 @@ def _parse_abstract_retrieval(abstract_entry):
     except Exception as e:
         print(e)
         traceback.print_exc()
-        # print("Sorting failed")
-        # print("affiliationdict")
-        # print(affiliationdict)
-        # print("authordict")
-        # print(authordict)
+     
         affiliationdict = None
         authordict = None 
     
-    #print("After sorting")
-    #print(affiliationdict)
-    #print(authordict)
     if(affiliationdict is not None and authordict is not None):
         if (len(authordict) != len(affiliationdict)):
             print("There is mismatch between author and affliation group")
@@ -728,16 +686,6 @@ def _parse_abstract_retrieval(abstract_entry):
         except Exception as e:
             print(e)
             traceback.print_exc()
-            # print("Exception Happened while creating author, affiliation and author with affiliation")
-            # print(" K value")
-            # print(k)
-            # print("author_name_str")
-            # print (author_name_str)
-            # print("affliation_name_list")
-            # print (affliation_name_list)
-            # print("author_with_affliation_str")
-            # print (author_with_affliation_str)
-
             author_name_str =None
             affliation_name_str=None
             author_with_affliation_str=None
@@ -750,87 +698,7 @@ def _parse_abstract_retrieval(abstract_entry):
         except Exception as e:
             print(e)
             traceback.print_exc()
-            # print("affliation_name_list")
-            # print(affliation_name_list)
-            # print("affliation_name_str")
-            # print(affliation_name_str) 
-
-    #print(author_name_str)
-    
-    #print(author_with_affliation_str) 
-
-    #print("Before removing the duplicates")
-    #print(affliation_name_list)   
-    
-    #print("After removing the duplicates")
-    #print(affliation_name_list)   
    
-    #print(affliation_name_str) 
-  
-
-
-
-    """ author_list = resp['authors']["author"]
-    author_list = sorted(author_list,key=lambda i:i["@seq"])
-    print(author_list)
-    try:
-        for i in author_list:
-            print("index : ")
-            print(author_list.index(i))
-            temp_name = i["ce:indexed-name"]
-            print(temp_name)
-            if(len(author_name_str)!=0):
-                author_name_str = author_name_str + ", "
-            author_name_str = author_name_str + temp_name
-            affiliation_list = i["affiliation"]
-            print(affiliation_list)
-            temp_affliation_name = ""
-            if(isinstance(affiliation_list, list)):
-                print("Affiliation is  list ")
-                for j in affiliation_list:
-                    afid = j["@id"]
-                    print(afid)
-                    print(affdict[afid] )
-                    if(len(affliation_name_str)!=0):
-                        affliation_name_str =affliation_name_str +", "
-                    if(len(temp_affliation_name)!=0):
-                        temp_affliation_name = temp_affliation_name +", "
-                    print("Index  : ")
-  
-                    temp_affliation_name =   temp_affliation_name + affdict[afid]    
-                    affliation_name_str = affliation_name_str + affdict[afid]
-                    print(temp_affliation_name)
-                    print(affliation_name_str)    
-                affliation_name_str = affliation_name_str + ";"
-                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
-                print(affliation_name_str)
-                print(author_with_affliation_str)
-            else:
-                print("Affiliation is not a list ")
-                afid = affiliation_list["@id"]
-                print(afid)
-                print(affdict[afid] )
-                temp_affliation_name =   temp_affliation_name + affdict[afid]   
-                affliation_name_str = affliation_name_str + affdict[afid] + ";"
-                author_with_affliation_str = author_with_affliation_str + temp_name+", "+temp_affliation_name+"; "
-                print(affliation_name_str)
-                print(author_with_affliation_str)
- 
-            if author_list.index(i)==0:
-                first_author_affiliation = temp_affliation_name
-            if author_list.index(i)==len(author_list)-1:
-                last_author_affiliation = temp_affliation_name
-        print(first_author_affiliation )
-        print(last_author_affiliation )
-    except:
-        affdict = None
-        author_name_str =None
-        affliation_name_str=None
-        author_with_affliation_str=None
-        first_author_affiliation = None
-        last_author_affiliation = None """
-
-
  
     try:
         if first_author_affiliation in nceh_affiliations:
