@@ -527,10 +527,13 @@ def _parse_affiliation_from_authorgroup(affiliation):
                             affiliation_text = affiliation_text + tempOrgName
             else:
                     affiliation_text = organization["$"]
-            country = affiliation["country"]
-            postalcode = affiliation["postal-code"]
-            city = affiliation["city"]
-            affiliation_text = affiliation_text + city +", "+ postalcode +", "+country       
+            if "city" in affiliation:
+                affiliation_text = affiliation_text + ", "+ affiliation["city"]
+            if "postalcode" in affiliation:
+                affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
+            if "country" in affiliation:
+                affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+    
     else:
             affiliation_text = "Affiliation Info not available from scoupus API"
     return affiliation_text
