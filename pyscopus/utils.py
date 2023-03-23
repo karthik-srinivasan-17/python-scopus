@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import urllib.parse
 import collections
+import json
 
 def _parse_aff(js_aff):
     ''' example: https://dev.elsevier.com/payloads/retrieval/affiliationRetrievalResp.xml'''
@@ -814,8 +815,11 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
     print("abstract_dict")
-    print(abstract_dict)
-    return abstract_dict
+    
+    json_object = json.dumps(abstract_dict, indent = 4)
+    print(json_object)
+    #return abstract_dict
+    return json_object
 
 def _search_scopus(key, query, type_, view, index=0):
     '''
