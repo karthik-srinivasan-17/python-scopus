@@ -664,15 +664,21 @@ def _parse_abstract_retrieval(abstract_entry):
         print("authordict")
         print(authordict)
         affiliationdict = None
-        authordict = None 
+        authordict = None
+        author_name_str =None
+        affliation_name_str=None
+        author_with_affliation_str=None
+        first_author_affiliation = None
+        last_author_affiliation = None  
 
 
     #print("Before sorting")
     #print(affiliationdict)
     #print(authordict)
     try:
-        affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
-        authordict = collections.OrderedDict(sorted(authordict.items()))
+        if(affiliationdict is not None and authordict is not None):
+            affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
+            authordict = collections.OrderedDict(sorted(authordict.items()))
     except:
         print("Sorting failed")
         print("affiliationdict")
@@ -685,49 +691,50 @@ def _parse_abstract_retrieval(abstract_entry):
     #print("After sorting")
     #print(affiliationdict)
     #print(authordict)
+    if(affiliationdict is not None and authordict is not None):
+        if (len(authordict) != len(affiliationdict)):
+            print("There is mismatch between author and affliation group")
 
-    if (len(authordict) != len(affiliationdict)):
-        print("There is mismatch between author and affliation group")
+        try:
+            k = 1
+            while k <= len(authordict):
+                if(len(author_name_str)!=0):
+                        author_name_str = author_name_str + ", "
+                author_name_str = author_name_str + authordict[str(k)]
+                affliation_name_list.extend(affiliationdict[str(k)])
+                if(len(author_with_affliation_str)!=0):
+                        author_with_affliation_str =author_with_affliation_str +"; "        
+                author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
+                if k==1:
+                    first_author_affiliation = ', '.join(affiliationdict[str(k)])
+                if k==len(authordict):
+                    last_author_affiliation = ', '.join(affiliationdict[str(k)])
+                k=k+1
+        except:
+            print("Exception Happened while creating author, affiliation and author with affiliation")
+            print(" K value")
+            print(k)
+            print("author_name_str")
+            print (author_name_str)
+            print("affliation_name_list")
+            print (affliation_name_list)
+            print("author_with_affliation_str")
+            print (author_with_affliation_str)
 
-    try:
-        k = 1
-        while k <= len(authordict):
-            #print("K value is ")
-            #print(k)
-            if(len(author_name_str)!=0):
-                    author_name_str = author_name_str + ", "
-            author_name_str = author_name_str + authordict[str(k)]
-            #print(authordict[str(k)])
-            affliation_name_list.extend(affiliationdict[str(k)])
-            #if(len(affliation_name_str)!=0):
-                    #affliation_name_str =affliation_name_str +"; "
-            #affliation_name_str = affliation_name_str + ', '.join(affiliationdict[str(k)])
-            #print("affiliationdict[str(k)]")
-            #print(affiliationdict[str(k)])
-            if(len(author_with_affliation_str)!=0):
-                    author_with_affliation_str =author_with_affliation_str +"; "        
-            author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
-            if k==1:
-                first_author_affiliation = ', '.join(affiliationdict[str(k)])
-            if k==len(authordict):
-                last_author_affiliation = ', '.join(affiliationdict[str(k)])
-            k=k+1
-    except:
-        print("Exception Happened while creating author, affiliation and author with affiliation")
-        print(" K value")
-        print(k)
-        print("author_name_str")
-        print (author_name_str)
-        print("affliation_name_list")
-        print (affliation_name_list)
-        print("author_with_affliation_str")
-        print (author_with_affliation_str)
-
-        author_name_str =None
-        affliation_name_str=None
-        author_with_affliation_str=None
-        first_author_affiliation = None
-        last_author_affiliation = None 
+            author_name_str =None
+            affliation_name_str=None
+            author_with_affliation_str=None
+            first_author_affiliation = None
+            last_author_affiliation = None
+        try:
+            affliation_name_list = set(affliation_name_list)
+            affliation_name_list = list(affliation_name_list)[::-1]
+            affliation_name_str = ', '.join(affliation_name_list)
+        except:
+            print("affliation_name_list")
+            print(affliation_name_list)
+            print("affliation_name_str")
+            print(affliation_name_str) 
 
     #print(author_name_str)
     
@@ -740,15 +747,7 @@ def _parse_abstract_retrieval(abstract_entry):
     #print(affliation_name_list)   
    
     #print(affliation_name_str) 
-    try:
-        affliation_name_list = set(affliation_name_list)
-        affliation_name_list = list(affliation_name_list)[::-1]
-        affliation_name_str = ', '.join(affliation_name_list)
-    except:
-        print("affliation_name_list")
-        print (affliation_name_list)
-        print("affliation_name_str")
-        print (affliation_name_str)
+  
 
 
 
