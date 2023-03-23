@@ -758,32 +758,23 @@ def _parse_abstract_retrieval(abstract_entry):
         author_keywords = None
         #authorKeywordsList = ""
         citation_info = resp["item"]["bibrecord"]["head"]["citation-info"]
-        authorKeywords = citation_info["author-keywords"]
-        if authorKeywords is not None:
-            authorKeywordsList = authorKeywords["author-keyword"]
-            if authorKeywordsList is not None:
-                if(isinstance(authorKeywordsList, list)):
-                    for i in authorKeywordsList:
-                        temp = i["$"]
-                        if(len(author_keywords) != 0):
-                            author_keywords = author_keywords +'; '
-                        author_keywords = author_keywords+temp
-                else:
-                    author_keywords = authorKeywordsList["$"]
-        
+        if "author-keywords" in citation_info: 
+            authorKeywords = citation_info["author-keywords"]
+            if authorKeywords is not None:
+                authorKeywordsList = authorKeywords["author-keyword"]
+                if authorKeywordsList is not None:
+                    if(isinstance(authorKeywordsList, list)):
+                        for i in authorKeywordsList:
+                            temp = i["$"]
+                            if(len(author_keywords) != 0):
+                                author_keywords = author_keywords +'; '
+                            author_keywords = author_keywords+temp
+                    else:
+                        author_keywords = authorKeywordsList["$"]
+            
     except Exception as e: 
-        
-        print("Exception happened at Author Keywords")
-        print("citationInfo")
-        print(resp["item"]["bibrecord"]["head"]["citation-info"])
         print(e)
         traceback.print_exc()
-        # print("authorKeywordsList")
-        # print (authorKeywordsList)
-        # print(" type of authorKeywordsList")
-        # print(type(authorKeywordsList))
-        # print("author_keywords")
-        # print (author_keywords)
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
