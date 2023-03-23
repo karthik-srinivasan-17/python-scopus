@@ -813,8 +813,8 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
     abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
-    
-
+    print("abstract_dict")
+    print(abstract_dict)
     return abstract_dict
 
 def _search_scopus(key, query, type_, view, index=0):
