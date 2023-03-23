@@ -605,6 +605,19 @@ def _parse_abstract_retrieval(abstract_entry):
                     
 
     except:
+        print("Exception happened")
+        print("author_group_list type")
+        print(type(author_group_list))
+        print("author_group_list")
+        print(author_group_list)
+        print("affiliation_text")
+        print(affiliation_text)
+        print("author_list")
+        print(author_list)
+        print("affiliationdict")
+        print(affiliationdict)
+        print("authordict")
+        print(authordict)
         affiliationdict = None
         authordict = None 
 
@@ -612,8 +625,18 @@ def _parse_abstract_retrieval(abstract_entry):
     #print("Before sorting")
     #print(affiliationdict)
     #print(authordict)
-    affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
-    authordict = collections.OrderedDict(sorted(authordict.items()))
+    try:
+        affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
+        authordict = collections.OrderedDict(sorted(authordict.items()))
+    except:
+        print("Sorting failed")
+        print("affiliationdict")
+        print(affiliationdict)
+        print("authordict")
+        print(authordict)
+        affiliationdict = None
+        authordict = None 
+    
     #print("After sorting")
     #print(affiliationdict)
     #print(authordict)
@@ -645,6 +668,16 @@ def _parse_abstract_retrieval(abstract_entry):
                 last_author_affiliation = ', '.join(affiliationdict[str(k)])
             k=k+1
     except:
+        print("Exception Happened while creating author, affiliation and author with affiliation")
+        print(" K value")
+        print(k)
+        print("author_name_str")
+        print (author_name_str)
+        print("affliation_name_list")
+        print (affliation_name_list)
+        print("author_with_affliation_str")
+        print (author_with_affliation_str)
+
         author_name_str =None
         affliation_name_str=None
         author_with_affliation_str=None
@@ -655,14 +688,23 @@ def _parse_abstract_retrieval(abstract_entry):
     
     #print(author_with_affliation_str) 
 
-    print("Before removing the duplicates")
+    #print("Before removing the duplicates")
     #print(affliation_name_list)   
-    affliation_name_list = set(affliation_name_list)
+    
     #print("After removing the duplicates")
     #print(affliation_name_list)   
-    affliation_name_list = list(affliation_name_list)[::-1]
-    affliation_name_str = ', '.join(affliation_name_list)
+   
     #print(affliation_name_str) 
+    try:
+        affliation_name_list = set(affliation_name_list)
+        affliation_name_list = list(affliation_name_list)[::-1]
+        affliation_name_str = ', '.join(affliation_name_list)
+    except:
+        print("affliation_name_list")
+        print (affliation_name_list)
+        print("affliation_name_str")
+        print (affliation_name_str)
+
 
 
     """ author_list = resp['authors']["author"]
@@ -790,6 +832,13 @@ def _parse_abstract_retrieval(abstract_entry):
                 author_keywords = author_keywords +'; '
             author_keywords = author_keywords+temp   
     except:
+        print("Exception happened at Author Keywords")
+        print("authorKeywordsList")
+        print (authorKeywordsList)
+        print(" type of authorKeywordsList")
+        print(type(authorKeywordsList))
+        print("author_keywords")
+        print (author_keywords)
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
@@ -814,12 +863,11 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
     abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
-    print("abstract_dict")
-    print(abstract_dict)
-    #json_object = json.dumps(abstract_dict, indent = 4)
-    #print(json_object)
+    #print("abstract_dict")
+    #print(abstract_dict)
+
     return abstract_dict
-    #return json_object
+
 
 def _search_scopus(key, query, type_, view, index=0):
     '''
