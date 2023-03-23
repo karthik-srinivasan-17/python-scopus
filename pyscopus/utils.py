@@ -830,7 +830,8 @@ def _parse_abstract_retrieval(abstract_entry):
                                         if key not in unwanted_keys}
     # rename keys
     abstract_dict['Scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
-    abstract_dict['Abstract'] = abstract_dict.pop('dc:description')
+    if "dc:description" in abstract_dict:
+        abstract_dict['Abstract'] = abstract_dict.pop('dc:description')
     abstract_dict['Abstract Retrieval Title'] = abstract_dict.pop('dc:title')
     abstract_dict['Abbreviated Source Title'] = abbreviated_source_title
     abstract_dict['CODEN'] = coden
