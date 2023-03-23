@@ -552,6 +552,21 @@ def _parse_abstract_retrieval(abstract_entry):
             # print("author_group_list is a list ")
             for i in author_group_list:
                 affiliation_text = i["affiliation"]["ce:source-text"]
+                if affiliation_text is None:
+                    organization = i["organization"]
+                    if organization is not None:
+                        if(isinstance(organization, list)):
+                            for l in organization:
+                                tempOrgName = l["$"]
+                                if(len(affiliation_text)!=0):
+                                     affiliation_text =affiliation_text +", "   
+                                affiliation_text = affiliation_text + tempOrgName
+                        else:
+                                affiliation_text = organization["$"]    
+                    else:
+                        affiliation_text = "Affiliation Info not available from scoupus API" 
+                    
+
                 # print("Type of affiliation_text")
                 # print(type(affiliation_text))
                 author_list = i["author"]
@@ -579,6 +594,19 @@ def _parse_abstract_retrieval(abstract_entry):
         else:
             #print("author_group_list is Not a  list ")
             affiliation_text = author_group_list["affiliation"]["ce:source-text"]
+            if affiliation_text is None:
+                    organization = author_group_list["affiliation"]["organization"]
+                    if organization is not None:
+                        if(isinstance(organization, list)):
+                            for l in organization:
+                                tempOrgName = l["$"]
+                                if(len(affiliation_text)!=0):
+                                     affiliation_text =affiliation_text +", "   
+                                affiliation_text = affiliation_text + tempOrgName
+                        else:
+                                affiliation_text = organization["$"]    
+                    else:
+                        affiliation_text = "Affiliation Info not available from scoupus API"
             #print("Type of affiliation_text")
             #print(type(affiliation_text))
             author_list = author_group_list["author"]
@@ -610,8 +638,12 @@ def _parse_abstract_retrieval(abstract_entry):
         print(type(author_group_list))
         print("author_group_list")
         print(author_group_list)
+        print("organization")
+        print(organization)
         print("affiliation_text")
         print(affiliation_text)
+        print("author_list type")
+        print(type(author_list))
         print("author_list")
         print(author_list)
         print("affiliationdict")
@@ -826,11 +858,12 @@ def _parse_abstract_retrieval(abstract_entry):
     try:
         authorKeywordsList = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]["author-keyword"]
         author_keywords = ""
-        for i in authorKeywordsList:
-            temp = i["$"]
-            if(len(author_keywords) != 0):
-                author_keywords = author_keywords +'; '
-            author_keywords = author_keywords+temp   
+        if authorKeywordsList is not None:
+            for i in authorKeywordsList:
+                temp = i["$"]
+                if(len(author_keywords) != 0):
+                    author_keywords = author_keywords +'; '
+                author_keywords = author_keywords+temp   
     except:
         print("Exception happened at Author Keywords")
         print("authorKeywordsList")
