@@ -580,7 +580,7 @@ async def _parse_abstract_retrieval(abstract_entry):
                     affiliation_text = affiliation["ce:source-text"]
                 else:
                     print ("ce source text is not present")
-                    affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
+                    affiliation_text = await _parse_affiliation_from_authorgroup(affiliation)
 
                 author_list = i["author"]
 
@@ -614,7 +614,7 @@ async def _parse_abstract_retrieval(abstract_entry):
                     affiliation_text = affiliation["ce:source-text"]
             else:
                     print ("ce source text is not present")
-                    affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
+                    affiliation_text = await _parse_affiliation_from_authorgroup(affiliation)
       
             author_list = author_group_list["author"]
  
