@@ -645,7 +645,8 @@ def _parse_abstract_retrieval(abstract_entry):
                 
                     
 
-    except:
+    except Exception as e: 
+        print(e)
         print("Exception happened")
         print("author_group_list type")
         print(type(author_group_list))
@@ -679,7 +680,8 @@ def _parse_abstract_retrieval(abstract_entry):
         if(affiliationdict is not None and authordict is not None):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
             authordict = collections.OrderedDict(sorted(authordict.items()))
-    except:
+    except Exception as e:
+        print(e)
         print("Sorting failed")
         print("affiliationdict")
         print(affiliationdict)
@@ -710,7 +712,8 @@ def _parse_abstract_retrieval(abstract_entry):
                 if k==len(authordict):
                     last_author_affiliation = ', '.join(affiliationdict[str(k)])
                 k=k+1
-        except:
+        except Exception as e:
+            print(e)
             print("Exception Happened while creating author, affiliation and author with affiliation")
             print(" K value")
             print(k)
@@ -730,7 +733,8 @@ def _parse_abstract_retrieval(abstract_entry):
             affliation_name_list = set(affliation_name_list)
             affliation_name_list = list(affliation_name_list)[::-1]
             affliation_name_str = ', '.join(affliation_name_list)
-        except:
+        except Exception as e:
+            print(e)
             print("affliation_name_list")
             print(affliation_name_list)
             print("affliation_name_str")
@@ -883,10 +887,12 @@ def _parse_abstract_retrieval(abstract_entry):
                 else:
                     author_keywords = authorKeywordsList["$"]
         
-    except:
+    except Exception as e: 
+        
         print("Exception happened at Author Keywords")
         print("citationInfo")
         print(resp["item"]["bibrecord"]["head"]["citation-info"])
+        print(e)
         # print("authorKeywordsList")
         # print (authorKeywordsList)
         # print(" type of authorKeywordsList")
