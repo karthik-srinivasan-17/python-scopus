@@ -545,11 +545,9 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-    # print("author_group_list type")
-    # print(type(author_group_list))
+
     try:
         if(isinstance(author_group_list, list)): 
-            
             for i in author_group_list:
                 affiliation_text = i["affiliation"]["ce:source-text"]
                 if affiliation_text is None:
@@ -571,11 +569,9 @@ def _parse_abstract_retrieval(abstract_entry):
                         affiliation_text = "Affiliation Info not available from scoupus API" 
                     
 
-                # print("Type of affiliation_text")
-                # print(type(affiliation_text))
+              
                 author_list = i["author"]
-                # print("Type of Author List")
-                # print(type(author_list))
+
                 if(isinstance(author_list, list)):
                     for j in author_list:
                         seqid = j["@seq"]
@@ -609,7 +605,7 @@ def _parse_abstract_retrieval(abstract_entry):
                     organization = author_group_list["affiliation"]["organization"]
                     print("affiliation_text is None ")
                     print("organization element ")
-                    print(organization)
+                    #print(organization)
                     if organization is not None:
                         if(isinstance(organization, list)):
                             for l in organization:
@@ -621,11 +617,9 @@ def _parse_abstract_retrieval(abstract_entry):
                                 affiliation_text = organization["$"]    
                     else:
                         affiliation_text = "Affiliation Info not available from scoupus API"
-            #print("Type of affiliation_text")
-            #print(type(affiliation_text))
+      
             author_list = author_group_list["author"]
-            #print("Type of Author List")
-            #print(type(author_list))
+ 
             if(isinstance(author_list, list)):
                 for j in author_list:
                         seqid = j["@seq"]
