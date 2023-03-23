@@ -555,7 +555,7 @@ def _parse_abstract_retrieval(abstract_entry):
                     print("affiliation_text is None ")
                     organization = i["affiliation"]["organization"]
                     print("organization element ")
-                    print(organization)
+                    #print(organization)
                     if organization is not None:
                         if(isinstance(organization, list)):
                             for l in organization:
@@ -654,11 +654,11 @@ def _parse_abstract_retrieval(abstract_entry):
         #print("organization")
         #print(organization)
         print("affiliation_text")
-        print(affiliation_text)
+        #print(affiliation_text)
         print("author_list type")
-        print(type(author_list))
+        #print(type(author_list))
         print("author_list")
-        print(author_list)
+        #print(author_list)
         print("affiliationdict")
         print(affiliationdict)
         print("authordict")
