@@ -878,17 +878,21 @@ def _parse_abstract_retrieval(abstract_entry):
         authorKeywordsList = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]["author-keyword"]
         author_keywords = ""
         if authorKeywordsList is not None:
-            for i in authorKeywordsList:
-                temp = i["$"]
-                if(len(author_keywords) != 0):
-                    author_keywords = author_keywords +'; '
-                author_keywords = author_keywords+temp   
+            if(isinstance(authorKeywordsList, list)):
+                for i in authorKeywordsList:
+                    temp = i["$"]
+                    if(len(author_keywords) != 0):
+                        author_keywords = author_keywords +'; '
+                    author_keywords = author_keywords+temp
+            else:
+                   author_keywords = authorKeywordsList["$"]
+        
     except:
         print("Exception happened at Author Keywords")
-        print("authorKeywordsList")
-        print (authorKeywordsList)
-        print(" type of authorKeywordsList")
-        print(type(authorKeywordsList))
+        # print("authorKeywordsList")
+        # print (authorKeywordsList)
+        # print(" type of authorKeywordsList")
+        # print(type(authorKeywordsList))
         print("author_keywords")
         print (author_keywords)
         author_keywords = None
