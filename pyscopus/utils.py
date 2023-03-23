@@ -515,7 +515,7 @@ def _parse_author_retrieval(author_entry):
 
     return author_dict
 
-async def _parse_affiliation_from_authorgroup(affiliation):
+def _parse_affiliation_from_authorgroup(affiliation):
     affiliation_text = ""
     if "organization" in affiliation:                
             organization = affiliation["organization"]
@@ -539,7 +539,7 @@ async def _parse_affiliation_from_authorgroup(affiliation):
     return affiliation_text
 
 
-async def _parse_abstract_retrieval(abstract_entry):
+def _parse_abstract_retrieval(abstract_entry):
     nceh_affiliations=["NCEH", "National Center for Environmental Health", 
                        "ATSDR", "Agency for Toxic Substances and Disease Registry", 
                        "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
@@ -580,7 +580,7 @@ async def _parse_abstract_retrieval(abstract_entry):
                     affiliation_text = affiliation["ce:source-text"]
                 else:
                     print ("ce source text is not present")
-                    affiliation_text = await _parse_affiliation_from_authorgroup(affiliation)
+                    #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
 
                 author_list = i["author"]
 
@@ -614,7 +614,7 @@ async def _parse_abstract_retrieval(abstract_entry):
                     affiliation_text = affiliation["ce:source-text"]
             else:
                     print ("ce source text is not present")
-                    affiliation_text = await _parse_affiliation_from_authorgroup(affiliation)
+                    #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
       
             author_list = author_group_list["author"]
  
