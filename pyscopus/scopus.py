@@ -144,7 +144,7 @@ class Scopus(object):
         except:
             raise ValueError('Author %s not found!' %author_id)
 
-    def retrieve_abstract(self, scopus_id, download_path=None, view='FULL'):
+    async def retrieve_abstract(self, scopus_id, download_path=None, view='FULL'):
         '''
             Retrieve publication abstracts
             Details: https://api.elsevier.com/documentation/AbstractRetrievalAPI.wadl

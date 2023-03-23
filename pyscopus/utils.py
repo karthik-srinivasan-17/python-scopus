@@ -545,62 +545,62 @@ def _parse_abstract_retrieval(abstract_entry):
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
-    print("author_group_list type")
-    print(type(author_group_list))
+    # print("author_group_list type")
+    # print(type(author_group_list))
     try:
         if(isinstance(author_group_list, list)): 
-            print("author_group_list is a list ")
+            # print("author_group_list is a list ")
             for i in author_group_list:
                 affiliation_text = i["affiliation"]["ce:source-text"]
-                print("Type of affiliation_text")
-                print(type(affiliation_text))
+                # print("Type of affiliation_text")
+                # print(type(affiliation_text))
                 author_list = i["author"]
-                print("Type of Author List")
-                print(type(author_list))
+                # print("Type of Author List")
+                # print(type(author_list))
                 for j in author_list:
                     seqid = j["@seq"]
                     author_text = j["ce:indexed-name"]
 
-                    print(seqid)
-                    print(author_text)
-                    print(affiliation_text)
+                    # print(seqid)
+                    # print(author_text)
+                    # print(affiliation_text)
                     authordict = {**authordict, seqid: author_text}
                     if seqid in affiliationdict:
                         templist = affiliationdict[seqid]
                         
                         templist.append(affiliation_text)
                         affiliationdict[seqid] = templist
-                        print("seqid in affiliationdict")
-                        print(affiliationdict[seqid])
+                        # print("seqid in affiliationdict")
+                        # print(affiliationdict[seqid])
                     else:
                         affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
-                        print("seqid is not in  affiliationdict")
-                        print(affiliationdict[seqid])
+                        # print("seqid is not in  affiliationdict")
+                        # print(affiliationdict[seqid])
         else:
-            print("author_group_list is Not a  list ")
+            #print("author_group_list is Not a  list ")
             affiliation_text = author_group_list["affiliation"]["ce:source-text"]
-            print("Type of affiliation_text")
-            print(type(affiliation_text))
+            #print("Type of affiliation_text")
+            #print(type(affiliation_text))
             author_list = author_group_list["author"]
-            print("Type of Author List")
-            print(type(author_list))
+            #print("Type of Author List")
+            #print(type(author_list))
             for j in author_list:
                     seqid = j["@seq"]
                     author_text = j["ce:indexed-name"]
-                    print(seqid)
-                    print(author_text)
-                    print(affiliation_text)
+                    #print(seqid)
+                    #print(author_text)
+                    #print(affiliation_text)
                     authordict = {**authordict, seqid: author_text}
                     if seqid in affiliationdict:
                         templist = affiliationdict[seqid]
                         templist.append(affiliation_text)
                         affiliationdict[seqid] = templist
-                        print("seqid in affiliationdict")
-                        print(affiliationdict[seqid])
+                        #print("seqid in affiliationdict")
+                        #print(affiliationdict[seqid])
                     else:
                         affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
-                        print("seqid is not in  affiliationdict")
-                        print(affiliationdict[seqid])
+                        # print("seqid is not in  affiliationdict")
+                        # print(affiliationdict[seqid])
             
                     
 
@@ -609,14 +609,14 @@ def _parse_abstract_retrieval(abstract_entry):
         authordict = None 
 
 
-    print("Before sorting")
-    print(affiliationdict)
-    print(authordict)
+    #print("Before sorting")
+    #print(affiliationdict)
+    #print(authordict)
     affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
     authordict = collections.OrderedDict(sorted(authordict.items()))
-    print("After sorting")
-    print(affiliationdict)
-    print(authordict)
+    #print("After sorting")
+    #print(affiliationdict)
+    #print(authordict)
 
     if (len(authordict) != len(affiliationdict)):
         print("There is mismatch between author and affliation group")
@@ -624,18 +624,18 @@ def _parse_abstract_retrieval(abstract_entry):
     try:
         k = 1
         while k <= len(authordict):
-            print("K value is ")
-            print(k)
+            #print("K value is ")
+            #print(k)
             if(len(author_name_str)!=0):
                     author_name_str = author_name_str + ", "
             author_name_str = author_name_str + authordict[str(k)]
-            print(authordict[str(k)])
+            #print(authordict[str(k)])
             affliation_name_list.extend(affiliationdict[str(k)])
             #if(len(affliation_name_str)!=0):
                     #affliation_name_str =affliation_name_str +"; "
             #affliation_name_str = affliation_name_str + ', '.join(affiliationdict[str(k)])
-            print("affiliationdict[str(k)]")
-            print(affiliationdict[str(k)])
+            #print("affiliationdict[str(k)]")
+            #print(affiliationdict[str(k)])
             if(len(author_with_affliation_str)!=0):
                     author_with_affliation_str =author_with_affliation_str +"; "        
             author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
@@ -651,18 +651,18 @@ def _parse_abstract_retrieval(abstract_entry):
         first_author_affiliation = None
         last_author_affiliation = None 
 
-    print(author_name_str)
+    #print(author_name_str)
     
-    print(author_with_affliation_str) 
+    #print(author_with_affliation_str) 
 
     print("Before removing the duplicates")
-    print(affliation_name_list)   
+    #print(affliation_name_list)   
     affliation_name_list = set(affliation_name_list)
-    print("After removing the duplicates")
-    print(affliation_name_list)   
+    #print("After removing the duplicates")
+    #print(affliation_name_list)   
     affliation_name_list = list(affliation_name_list)[::-1]
     affliation_name_str = ', '.join(affliation_name_list)
-    print(affliation_name_str) 
+    #print(affliation_name_str) 
 
 
     """ author_list = resp['authors']["author"]
@@ -815,11 +815,11 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
 
     print("abstract_dict")
-    
-    json_object = json.dumps(abstract_dict, indent = 4)
-    print(json_object)
-    #return abstract_dict
-    return json_object
+    print(abstract_dict)
+    #json_object = json.dumps(abstract_dict, indent = 4)
+    #print(json_object)
+    return abstract_dict
+    #return json_object
 
 def _search_scopus(key, query, type_, view, index=0):
     '''
