@@ -875,8 +875,11 @@ def _parse_abstract_retrieval(abstract_entry):
         coden = None    
 
     try:
-        authorKeywordsList = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]["author-keyword"]
-        author_keywords = ""
+        author_keywords = None
+        authorKeywordsList = None
+        authorKeywords = resp["item"]["bibrecord"]["head"]["citation-info"]["author-keywords"]
+        if authorKeywords is not None:
+            authorKeywordsList = authorKeywords["author-keyword"]
         if authorKeywordsList is not None:
             if(isinstance(authorKeywordsList, list)):
                 for i in authorKeywordsList:
@@ -893,8 +896,8 @@ def _parse_abstract_retrieval(abstract_entry):
         # print (authorKeywordsList)
         # print(" type of authorKeywordsList")
         # print(type(authorKeywordsList))
-        print("author_keywords")
-        print (author_keywords)
+        # print("author_keywords")
+        # print (author_keywords)
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:creator', 'link')
