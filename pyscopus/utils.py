@@ -574,32 +574,35 @@ def _parse_abstract_retrieval(abstract_entry):
     try:
         if(isinstance(author_group_list, list)): 
             for i in author_group_list:
-                affiliation = i["affiliation"]
-                affiliation_text = ""
-                if "ce:source-text" in affiliation:
-                    print ("ce source text is present")
-                    affiliation_text = affiliation["ce:source-text"]
-                else:
-                    print ("ce source text is not present")
-                    #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
-                    if "organization" in affiliation:                
-                        organization = affiliation["organization"]
-                        if(isinstance(organization, list)):
-                                    for l in organization:
-                                        tempOrgName = l["$"]
-                                        if(len(affiliation_text)!=0):
-                                            affiliation_text =affiliation_text +", "   
-                                            affiliation_text = affiliation_text + tempOrgName
-                        else:
-                                    affiliation_text = organization["$"]
-                        if "city" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["city"]
-                        if "postalcode" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
-                        if "country" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+                if "affiliation" in i:
+                    affiliation = i["affiliation"]
+                    affiliation_text = ""
+                    if "ce:source-text" in affiliation:
+                        print ("ce source text is present")
+                        affiliation_text = affiliation["ce:source-text"]
                     else:
-                            affiliation_text = "Affiliation Info not available from scoupus API"
+                        print ("ce source text is not present")
+                        #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
+                        if "organization" in affiliation:                
+                            organization = affiliation["organization"]
+                            if(isinstance(organization, list)):
+                                        for l in organization:
+                                            tempOrgName = l["$"]
+                                            if(len(affiliation_text)!=0):
+                                                affiliation_text =affiliation_text +", "   
+                                                affiliation_text = affiliation_text + tempOrgName
+                            else:
+                                        affiliation_text = organization["$"]
+                            if "city" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["city"]
+                            if "postalcode" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
+                            if "country" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+                        else:
+                                affiliation_text = " "
+                else:
+                        affiliation_text = " "                
 
                 author_list = i["author"]
 
@@ -627,32 +630,35 @@ def _parse_abstract_retrieval(abstract_entry):
 
 
         else:
-            affiliation = author_group_list["affiliation"]
-            affiliation_text = ""
-            if "ce:source-text" in affiliation:
-                    print ("ce source text is present")
-                    affiliation_text = affiliation["ce:source-text"]
-            else:
-                    print ("ce source text is not present")
-                    #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
-                    if "organization" in affiliation:                
-                        organization = affiliation["organization"]
-                        if(isinstance(organization, list)):
-                                    for l in organization:
-                                        tempOrgName = l["$"]
-                                        if(len(affiliation_text)!=0):
-                                            affiliation_text =affiliation_text +", "   
-                                            affiliation_text = affiliation_text + tempOrgName
+            if "affiliation" in author_group_list:
+                affiliation = author_group_list["affiliation"]
+                affiliation_text = " "
+                if "ce:source-text" in affiliation:
+                        print ("ce source text is present")
+                        affiliation_text = affiliation["ce:source-text"]
+                else:
+                        print ("ce source text is not present")
+                        #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
+                        if "organization" in affiliation:                
+                            organization = affiliation["organization"]
+                            if(isinstance(organization, list)):
+                                        for l in organization:
+                                            tempOrgName = l["$"]
+                                            if(len(affiliation_text)!=0):
+                                                affiliation_text =affiliation_text +", "   
+                                                affiliation_text = affiliation_text + tempOrgName
+                            else:
+                                        affiliation_text = organization["$"]
+                            if "city" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["city"]
+                            if "postalcode" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
+                            if "country" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]        
                         else:
-                                    affiliation_text = organization["$"]
-                        if "city" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["city"]
-                        if "postalcode" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
-                        if "country" in affiliation:
-                                affiliation_text = affiliation_text + ", "+ affiliation["country"]        
-                    else:
-                            affiliation_text = "Affiliation Info not available from scoupus API"
+                                affiliation_text = " "
+            else:
+                affiliation_text = " "                
       
             author_list = author_group_list["author"]
  
