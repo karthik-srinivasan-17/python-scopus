@@ -549,10 +549,11 @@ def _parse_abstract_retrieval(abstract_entry):
     # print(type(author_group_list))
     try:
         if(isinstance(author_group_list, list)): 
-            # print("author_group_list is a list ")
+            
             for i in author_group_list:
                 affiliation_text = i["affiliation"]["ce:source-text"]
                 if affiliation_text is None:
+                    print("author_group_list is a list ")
                     print("affiliation_text is None ")
                     organization = i["affiliation"]["organization"]
                     print("organization element ")
@@ -595,9 +596,12 @@ def _parse_abstract_retrieval(abstract_entry):
                         # print("seqid is not in  affiliationdict")
                         # print(affiliationdict[seqid])
         else:
-            print("author_group_list is Not a  list ")
             affiliation_text = author_group_list["affiliation"]["ce:source-text"]
             if affiliation_text is None:
+                    print("author_group_list is Not a  list ")
+                    print("type of author_group_list")
+                    print(type(author_group_list))
+                    print(isinstance(author_group_list, list))
                     organization = author_group_list["affiliation"]["organization"]
                     print("affiliation_text is None ")
                     print("organization element ")
