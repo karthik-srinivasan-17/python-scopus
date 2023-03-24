@@ -835,7 +835,7 @@ def _parse_abstract_retrieval(abstract_entry):
         abstract_dict['Abstract'] = ""    
     if "publishercopyright" in abstract_dict:
         abstract_dict['Abstract'] = abstract_dict['Abstract'] + ", "+ abstract_dict['publishercopyright']
-        abstract_dict.pop['publishercopyright']
+        abstract_dict.pop('publishercopyright')
 
     
     abstract_dict['Abstract Retrieval Title'] = abstract_dict.pop('dc:title')
