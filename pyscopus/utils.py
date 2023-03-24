@@ -459,14 +459,14 @@ def _parse_article(entry):
 
     return pd.Series({'Link':Link,'Authors_ID': author_id_list,'Pubmed_ID_Scopus':pubmed_id,\
                       'EID':eid,'Art No': art_no,'Issue':issue, 'Access Type':open_access,\
-            'Page start': pageStart, 'Page end': pageEnd, 'Page count':pageCount,'page_range': pagerange,\
-            #'cover_date': coverdate, 'eissn': eissn,'Authors':author_name_list,"Authors with affliations":author_with_affliation_string,'Affiliations': affiliation,
+            'Page start': pageStart, 'Page end': pageEnd, 'Page count':pageCount,\
+            #'page_range': pagerange,'cover_date': coverdate, 'eissn': eissn,'Authors':author_name_list,"Authors with affliations":author_with_affliation_string,'Affiliations': affiliation,
             'Year':year,\
             'scopus-id': scopus_id,\
-            'Scopus_Search_Title': title, 'publication_name':publicationname,\
+            'Pub_Title': title, 'Source_Title':publicationname,\
             'ISSN': issn, 'ISBN': isbn,  'Volume': volume,\
-             'DOI': doi,'citation_count': citationcount, \
-            'aggregation_type': aggregationtype, 'subtype_description': sub_dc,\
+             'DOI': doi,'Cited by': citationcount, \
+            'Document': aggregationtype, 'Document Type': sub_dc,\
             'full_text': full_text_link})
 
 def _parse_entry(entry, type_):
@@ -820,14 +820,22 @@ def _parse_abstract_retrieval(abstract_entry):
         traceback.print_exc()
         author_keywords = None
     # keys to exclude
-    unwanted_keys = ('dc:creator', 'link')
+    unwanted_keys = ('dc:creator', 'link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
+                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','publishercopyright',
+                      'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
+                       'prism:doi','prism:startingPage','dc:publisher','Scopus-id' )
   
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
     # rename keys
     abstract_dict['Scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
-    if "dc:description" in abstract_dict:
+    if "dc:description" in abstract_dict :
         abstract_dict['Abstract'] = abstract_dict.pop('dc:description')
+    else:
+        abstract_dict['Abstract'] = ""    
+    if "publishercopyright" in abstract_dict:
+        abstract_dict['Abstract'] = abstract_dict['Abstract'] + ", "+ abstract_dict['publishercopyright']
+
     abstract_dict['Abstract Retrieval Title'] = abstract_dict.pop('dc:title')
     abstract_dict['Abbreviated Source Title'] = abbreviated_source_title
     abstract_dict['CODEN'] = coden
