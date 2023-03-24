@@ -834,7 +834,15 @@ def _parse_abstract_retrieval(abstract_entry):
     else:
         abstract_dict['Abstract'] = ""    
     if "publishercopyright" in abstract_dict:
-        abstract_dict['Abstract'] = abstract_dict['Abstract'] + ", "+ abstract_dict['publishercopyright']
+        if isinstance(abstract_dict['Abstract'],list):
+            AbstractTemp = ' '.join([str(elem) for elem in abstract_dict['Abstract']])
+        else:
+            AbstractTemp =  abstract_dict['Abstract']
+        if isinstance(abstract_dict['publishercopyright'],list):
+            publishercopyrightTemp = ' '.join([str(elem) for elem in abstract_dict['publishercopyright']])
+        else:
+            publishercopyrightTemp =  abstract_dict['publishercopyright']       
+        abstract_dict['Abstract'] = AbstractTemp + ", "+ publishercopyrightTemp
         abstract_dict.pop('publishercopyright')
 
     
