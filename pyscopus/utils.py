@@ -467,7 +467,8 @@ def _parse_article(entry):
             'ISSN': issn, 'ISBN': isbn,  'Volume': volume,\
              'DOI': doi,'Cited by': citationcount, \
             'Document': aggregationtype, 'Document Type': sub_dc,\
-            'full_text': full_text_link})
+            #'full_text': full_text_link
+            })
 
 def _parse_entry(entry, type_):
     if type_ == 1 or type_ == 'article':
@@ -540,6 +541,7 @@ def _parse_affiliation_from_authorgroup(affiliation):
 
 
 def _parse_abstract_retrieval(abstract_entry):
+    coredata["eid"]
     nceh_affiliations=["NCEH", "National Center for Environmental Health", 
                        "ATSDR", "Agency for Toxic Substances and Disease Registry", 
                        "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
@@ -716,11 +718,15 @@ def _parse_abstract_retrieval(abstract_entry):
             while k <= len(authordict):
                 if(len(author_name_str)!=0):
                         author_name_str = author_name_str + ", "
-                author_name_str = author_name_str + authordict[str(k)]
+                if authordict[str(k)] is not None:
+                    author_name_str = author_name_str + authordict[str(k)]  
                 affliation_name_list.extend(affiliationdict[str(k)])
                 if(len(author_with_affliation_str)!=0):
-                        author_with_affliation_str =author_with_affliation_str +"; "        
-                author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
+                        author_with_affliation_str =author_with_affliation_str +"; "
+                if authordict[str(k)] is not None:        
+                    author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
+                else:
+                    author_with_affliation_str = author_with_affliation_str +", "+ ', '.join(affiliationdict[str(k)])    
                 if k==1:
                     first_author_affiliation = ', '.join(affiliationdict[str(k)])
                 if k==len(authordict):
@@ -821,9 +827,9 @@ def _parse_abstract_retrieval(abstract_entry):
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:identifier','dc:creator','pii','article-number','link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
-                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn',
+                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:issn'
                       'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
-                       'prism:doi','prism:startingPage','dc:publisher' )
+                       'prism:doi','prism:startingPage','dc:publisher')
   
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
