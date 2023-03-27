@@ -364,26 +364,42 @@ def _parse_article(entry):
     except:
         publicationname = None
     try:
-        issn = entry['prism:issn']
+        issn =""
+        pissn = entry['prism:issn']
+        if(isinstance(pissn, list)):
+            for i in pissn:
+                if "$" in i:
+                    if(len(issn) != 0):
+                        issn = issn +', '
+                    issn = issn + i["$"]
+        else:
+            issn = pissn            
     except:
         issn = None
     try:
-        isbn = entry['prism:isbn']
+        isbn =""
+        pisbn = entry['prism:isbn']
+        if(isinstance(pisbn, list)):
+            for i in pisbn:
+                if "$" in i:
+                    if(len(isbn) != 0):
+                        isbn = isbn +', '
+                    isbn = isbn + i["$"]
+        else:
+            isbn = pisbn
     except:
         isbn = None
-    try:
-        eissn = entry['prism:eIssn']
-    except:
-        eissn = None
+  
     try:
         volume = entry['prism:volume']
     except:
         volume = None
     try:
         pagerange = entry['prism:pageRange']
-        pageStart = pagerange.split('-')[0]
-        pageEnd = pagerange.split('-')[1]
-        pageCount = int(pageEnd) - int(pageStart)
+        if pagerange is not None:
+            pageStart = pagerange.split('-')[0]
+            pageEnd = pagerange.split('-')[1]
+            pageCount = int(pageEnd) - int(pageStart)
     except:
         pagerange = None
         pageStart = None
@@ -402,7 +418,7 @@ def _parse_article(entry):
     except:
         doi = None
     try:
-        citationcount = int(entry['citedby-count'])
+        citationcount = entry['citedby-count']
     except:
         citationcount = None
     
@@ -419,20 +435,21 @@ def _parse_article(entry):
         #author_id_list = [auth_entry['authid'] for auth_entry in author_entry]
         author_id_list = ""
         for i in author_entry:
-            temp = i["authid"]
-            if(len(author_id_list) != 0):
-                author_id_list = author_id_list +'; '
-            author_id_list = author_id_list+temp   
+            if "authid" in i:
+                temp = i["authid"]
+                if(len(author_id_list) != 0):
+                    author_id_list = author_id_list +'; '
+                author_id_list = author_id_list+temp   
     except:
         author_id_list = None
-    try:
-        link_list = entry['link']
-        full_text_link = None
-        for link in link_list:
-            if link['@ref'] == 'full-text':
-                full_text_link = link['@href']
-    except:
-        full_text_link = None
+    # try:
+    #     link_list = entry['link']
+    #     full_text_link = None
+    #     for link in link_list:
+    #         if link['@ref'] == 'full-text':
+    #             full_text_link = link['@href']
+    # except:
+    #     full_text_link = None
 
     try:
         art_no = entry['article-number']
@@ -742,7 +759,7 @@ def _parse_abstract_retrieval(abstract_entry):
                 if authordict[str(k)] is not None:
                     author_name_str = author_name_str + authordict[str(k)]  
                 affliation_name_list.extend(affiliationdict[str(k)])
-                if(len(author_with_affliation_str)!=0):
+                if(len(author_with_affliation_str)!=0 and author_with_affliation_str[-2:] !="; "):
                         author_with_affliation_str =author_with_affliation_str +"; "
                 if authordict[str(k)] is not None:        
                     author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
@@ -773,18 +790,19 @@ def _parse_abstract_retrieval(abstract_entry):
    
  
     try:
-        if first_author_affiliation in nceh_affiliations:
+
+        if first_author_affiliation.split(',')[0] in nceh_affiliations:
             NCEH_ATSDR_FIRST = "Yes"
-        elif first_author_affiliation in cdc_only:
+        elif first_author_affiliation.split(',')[0] in cdc_only:
             NCEH_ATSDR_FIRST ="TBD"
         else:
             NCEH_ATSDR_FIRST = "No"
     except:
         NCEH_ATSDR_FIRST = None
     try:
-        if last_author_affiliation in nceh_affiliations:
+        if last_author_affiliation.split(',')[0] in nceh_affiliations:
             NCEH_ATSDR_LAST = "Yes"
-        elif last_author_affiliation in cdc_only:
+        elif last_author_affiliation.split(',')[0] in cdc_only:
             NCEH_ATSDR_LAST ="TBD"
         else:
             NCEH_ATSDR_LAST = "No"
@@ -792,11 +810,11 @@ def _parse_abstract_retrieval(abstract_entry):
         NCEH_ATSDR_LAST = None
     ### Division of author
     try:
-        if first_author_affiliation in DEHSP_Div:
+        if first_author_affiliation.split(',')[0] in DEHSP_Div:
             FIRST_AUTHOR_DIVISION = "DEHSP"
-        elif first_author_affiliation in DLS_Div:
+        elif first_author_affiliation.split(',')[0] in DLS_Div:
             FIRST_AUTHOR_DIVISION ="DLS"
-        elif first_author_affiliation in ATSDR_Div:
+        elif first_author_affiliation.split(',')[0] in ATSDR_Div:
             FIRST_AUTHOR_DIVISION ="ATSDR"    
         else:
             FIRST_AUTHOR_DIVISION = "TBD"
@@ -804,11 +822,11 @@ def _parse_abstract_retrieval(abstract_entry):
         FIRST_AUTHOR_DIVISION = None
 
     try:
-        if last_author_affiliation in DEHSP_Div:
+        if last_author_affiliation.split(',')[0] in DEHSP_Div:
             LAST_AUTHOR_DIVISION = "DEHSP"
-        elif last_author_affiliation in DLS_Div:
+        elif last_author_affiliation.split(',')[0] in DLS_Div:
             LAST_AUTHOR_DIVISION ="DLS"
-        elif last_author_affiliation in ATSDR_Div:
+        elif last_author_affiliation.split(',')[0] in ATSDR_Div:
             LAST_AUTHOR_DIVISION ="ATSDR"    
         else:
             LAST_AUTHOR_DIVISION = "TBD"
@@ -852,7 +870,7 @@ def _parse_abstract_retrieval(abstract_entry):
     unwanted_keys = ('dc:identifier','dc:creator','pii','article-number','link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
                      'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:isbn'
                       'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
-                       'prism:doi','prism:startingPage','dc:publisher')
+                       'prism:doi','prism:startingPage','dc:publisher','prism:issueIdentifier')
   
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
