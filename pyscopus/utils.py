@@ -452,7 +452,10 @@ def _parse_article(entry):
         open_access = None
 
     try:
-        Link = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
+        if doi is not None: 
+            Link = APIURI.SCOPUS_URL+eid+"&doi="+doi+"&partnerID=40"
+        else:
+            Link = APIURI.SCOPUS_URL+eid+"&partnerID=40"
         #Link = urllib.parse.urlencode(linkString)
     except:
         Link = None        
@@ -573,10 +576,18 @@ def _parse_abstract_retrieval(abstract_entry):
     source = resp["item"]["bibrecord"]["head"]["source"]
     author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
     eid =coredata["eid"]
+    collaboration =""
 
     try:
         if(isinstance(author_group_list, list)): 
             for i in author_group_list:
+                if "collaboration" in i:
+                    if(len(collaboration)!=0):
+                        collaboration =collaboration +", " 
+                    if "ce:indexed-name" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                    elif "ce:text" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
                 if "affiliation" in i:
                     affiliation = i["affiliation"]
                     affiliation_text = ""
@@ -658,10 +669,12 @@ def _parse_abstract_retrieval(abstract_entry):
                             if "postalcode" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
                             if "country" in affiliation:
-                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]
+                        elif "ce:text" in affiliation:
+                            affiliation_text = affiliation["ce:text"]                      
                         else:
-                                affiliation_text = " "
-                                print("organization is null for :"+  str(eid))
+                            affiliation_text = " "
+                            print("organization and ce:text is null for :"+  str(eid))
             else:
                 affiliation_text = " "                
       
@@ -751,7 +764,9 @@ def _parse_abstract_retrieval(abstract_entry):
         try:
             affliation_name_list = set(affliation_name_list)
             affliation_name_list = list(affliation_name_list)[::-1]
-            affliation_name_str = ', '.join(affliation_name_list)
+            affliation_name_str = ', '.join(affliation_name_list) 
+            if len(collaboration) !=0:
+                author_with_affliation_str = author_with_affliation_str +", "+ collaboration
         except Exception as e:
             print(e)
             traceback.print_exc()
