@@ -850,7 +850,7 @@ def _parse_abstract_retrieval(abstract_entry):
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:identifier','dc:creator','pii','article-number','link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
-                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:issn'
+                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:isbn'
                       'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
                        'prism:doi','prism:startingPage','dc:publisher')
   
