@@ -396,10 +396,9 @@ def _parse_article(entry):
         volume = None
     try:
         pagerange = entry['prism:pageRange']
-        if pagerange is not None:
-            pageStart = pagerange.split('-')[0]
-            pageEnd = pagerange.split('-')[1]
-            pageCount = int(pageEnd) - int(pageStart)
+        pageStart = pagerange.split('-')[0]
+        pageEnd = pagerange.split('-')[1]
+        pageCount = int(pageEnd) - int(pageStart)
     except:
         pagerange = None
         pageStart = None
