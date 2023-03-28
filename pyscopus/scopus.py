@@ -167,8 +167,6 @@ class Scopus(object):
 
         par = {'apikey': self.apikey, 'httpAccept': 'application/json', 'view': view}
         r = requests.get('%s/%s'%(APIURI.ABSTRACT, scopus_id), params=par)
-        print("response Header")
-        print(r.headers)
         js = r.json()
 
 

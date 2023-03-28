@@ -611,7 +611,7 @@ def _parse_abstract_retrieval(abstract_entry):
                         affiliation_text = affiliation["ce:source-text"]
                     else:
                         #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
-                        print("ce:source-text is null for :"+ str(eid))
+                        #print("ce:source-text is null for :"+ str(eid))
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
                             if(isinstance(organization, list)):
@@ -622,7 +622,7 @@ def _parse_abstract_retrieval(abstract_entry):
                                                 affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
-                                        print("organization is null for :"+  str(eid))
+                                        #print("organization is null for :"+  str(eid))
                             if "city" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["city"]
                             if "postalcode" in affiliation:
@@ -669,7 +669,7 @@ def _parse_abstract_retrieval(abstract_entry):
                         affiliation_text = affiliation["ce:source-text"]
                 else:
                         #affiliation_text = _parse_affiliation_from_authorgroup(affiliation)
-                        print("ce:source-text is null for :"+  str(eid))
+                        #print("ce:source-text is null for :"+  str(eid))
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
                             if(isinstance(organization, list)):
@@ -690,7 +690,7 @@ def _parse_abstract_retrieval(abstract_entry):
                             affiliation_text = affiliation["ce:text"]                      
                         else:
                             affiliation_text = " "
-                            print("organization and ce:text is null for :"+  str(eid))
+                            #print("organization and ce:text is null for :"+  str(eid))
             else:
                 affiliation_text = " "                
       
