@@ -590,13 +590,15 @@ def _parse_abstract_retrieval(abstract_entry):
     # coredata
     coredata = resp['coredata']
     source = resp["item"]["bibrecord"]["head"]["source"]
-    author_group_list = resp["item"]["bibrecord"]["head"]["author-group"]
+    authorgrouplistorsingle= resp["item"]["bibrecord"]["head"]["author-group"]
     eid =coredata["eid"]
     collaboration =""
 
     try:
-        if(isinstance(author_group_list, list)): 
-            for i in author_group_list:
+        # Author Group is list or single entity check 
+        if(isinstance(authorgrouplistorsingle, list)): 
+            # Author Group is list
+            for i in authorgrouplistorsingle:
                 if "collaboration" in i:
                     if(len(collaboration)!=0):
                         collaboration =collaboration +", " 
@@ -604,6 +606,7 @@ def _parse_abstract_retrieval(abstract_entry):
                         collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
                     elif "ce:text" in i["collaboration"]:
                         collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                    continue    
                 if "affiliation" in i:
                     affiliation = i["affiliation"]
                     affiliation_text = ""
@@ -629,8 +632,11 @@ def _parse_abstract_retrieval(abstract_entry):
                                     affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
                             if "country" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+                        elif "ce:text" in affiliation:
+                            affiliation_text = affiliation["ce:text"]                      
                         else:
-                                affiliation_text = " "
+                            affiliation_text = " "
+                            print("organization and ce:text is null for :"+  str(eid))
                 else:
                         affiliation_text = " "                
 
@@ -658,12 +664,13 @@ def _parse_abstract_retrieval(abstract_entry):
                             else:
                                 affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
                 else:
-                    print("author is null for :"+  str(eid))
+                    if(len(collaboration)==0):
+                        print("author is null for :"+  str(eid))
 
 
         else:
-            if "affiliation" in author_group_list:
-                affiliation = author_group_list["affiliation"]
+            if "affiliation" in authorgrouplistorsingle:
+                affiliation = authorgrouplistorsingle["affiliation"]
                 affiliation_text = " "
                 if "ce:source-text" in affiliation:
                         affiliation_text = affiliation["ce:source-text"]
@@ -690,12 +697,18 @@ def _parse_abstract_retrieval(abstract_entry):
                             affiliation_text = affiliation["ce:text"]                      
                         else:
                             affiliation_text = " "
-                            #print("organization and ce:text is null for :"+  str(eid))
+                            print("organization and ce:text is null for :"+  str(eid))
             else:
                 affiliation_text = " "                
-      
-            if "author" in author_group_list:
-                author_list = author_group_list["author"]   
+            if "collaboration" in authorgrouplistorsingle:
+                    if(len(collaboration)!=0):
+                        collaboration =collaboration +", " 
+                    if "ce:indexed-name" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                    elif "ce:text" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+            if "author" in authorgrouplistorsingle:
+                author_list = authorgrouplistorsingle["author"]   
                 if(isinstance(author_list, list)):
                     for j in author_list:
                             seqid = j["@seq"]
@@ -718,7 +731,9 @@ def _parse_abstract_retrieval(abstract_entry):
                             else:
                                 affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
             else:
-                print("author is null for :"+  str(eid))
+                if(len(collaboration)==0):
+                        print("author is null for :"+  str(eid))
+                
                 
                     
 
@@ -753,7 +768,7 @@ def _parse_abstract_retrieval(abstract_entry):
         try:
             k = 1
             while k <= len(authordict):
-                if(len(author_name_str)!=0):
+                if(len(author_name_str)!=0 and author_name_str[-2:] !=", "):
                         author_name_str = author_name_str + ", "
                 if authordict[str(k)] is not None:
                     author_name_str = author_name_str + authordict[str(k)]  
@@ -777,11 +792,13 @@ def _parse_abstract_retrieval(abstract_entry):
             author_with_affliation_str=None
             first_author_affiliation = None
             last_author_affiliation = None
+
+            
         try:
             affliation_name_list = set(affliation_name_list)
             affliation_name_list = list(affliation_name_list)[::-1]
             affliation_name_str = ', '.join(affliation_name_list) 
-            if len(collaboration) !=0:
+            if len(collaboration)!=0 and author_with_affliation_str is not None:
                 author_with_affliation_str = author_with_affliation_str +", "+ collaboration
         except Exception as e:
             print(e)
@@ -867,13 +884,13 @@ def _parse_abstract_retrieval(abstract_entry):
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:identifier','dc:creator','pii','article-number','link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
-                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:isbn'
+                     'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:isbn',
                       'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
                        'prism:doi','prism:startingPage','dc:publisher','prism:issueIdentifier')
   
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
-    # rename keys
+    # rename keys2..
     #abstract_dict['Scopus-id'] = abstract_dict.pop('dc:identifier').split(':')[-1]
     if "dc:description" in abstract_dict :
         abstract_dict['Abstract'] = abstract_dict.pop('dc:description')
