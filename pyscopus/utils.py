@@ -584,8 +584,7 @@ def _parse_abstract_retrieval(abstract_entry):
     affiliationdict={}
     authordict={}
     affliation_name_list=[]
-    print("Abstract Entry")
-    print(abstract_entry)
+
     resp = abstract_entry['abstracts-retrieval-response']
     
     # coredata
