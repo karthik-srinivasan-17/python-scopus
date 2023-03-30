@@ -776,13 +776,13 @@ def _parse_abstract_retrieval(abstract_entry):
                 if(len(author_with_affliation_str)!=0 and author_with_affliation_str[-2:] !="; "):
                         author_with_affliation_str =author_with_affliation_str +"; "
                 if authordict[str(k)] is not None:        
-                    author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +", "+ ', '.join(affiliationdict[str(k)])
+                    author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +"%"+ ', '.join(affiliationdict[str(k)])
                 else:
-                    author_with_affliation_str = author_with_affliation_str +", "+ ', '.join(affiliationdict[str(k)])    
+                    author_with_affliation_str = author_with_affliation_str +", "+ '%'.join(affiliationdict[str(k)])    
                 if k==1:
-                    first_author_affiliation = ', '.join(affiliationdict[str(k)])
+                    first_author_affiliation = '%'.join(affiliationdict[str(k)])
                 if k==len(authordict):
-                    last_author_affiliation = ', '.join(affiliationdict[str(k)])
+                    last_author_affiliation = '%'.join(affiliationdict[str(k)])
                 k=k+1
         except Exception as e:
             print(e)
