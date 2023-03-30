@@ -396,9 +396,16 @@ def _parse_article(entry):
         volume = None
     try:
         pagerange = entry['prism:pageRange']
-        pageStart = pagerange.split('-')[0]
-        pageEnd = pagerange.split('-')[1]
-        pageCount = int(pageEnd) - int(pageStart)
+        if pagerange is not None and len(pagerange)>0:
+            pageStart = pagerange.split('-')[0]
+            pageEnd = pagerange.split('-')[1]
+        else:
+            pageStart = None
+            pageEnd =None
+        if pageStart is not None and pageEnd is not None:
+            pageCount = int(pageEnd) - int(pageStart)
+        else:
+            pageCount = None
     except:
         pagerange = None
         pageStart = None
@@ -406,12 +413,15 @@ def _parse_article(entry):
         pageCount = None        
     try:
         coverdate = entry['prism:coverDate']
+        if coverdate is not None and len(coverdate)>0:
+            year = coverdate.split('-')[0]
+        else:
+            year = None
+            coverdate = None
     except:
         coverdate = None
-    try:
-        year = coverdate.split('-')[0]
-    except:
-        year = None    
+        year =None
+  
     try:
         doi = entry['prism:doi']
     except:
@@ -600,12 +610,12 @@ def _parse_abstract_retrieval(abstract_entry):
             # Author Group is list
             for i in authorgrouplistorsingle:
                 if "collaboration" in i:
-                    if(len(collaboration)!=0):
+                    if(len(collaboration)!=0 and collaboration[-2:] !=", "):
                         collaboration =collaboration +", " 
                     if "ce:indexed-name" in i["collaboration"]:
                         collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
                     elif "ce:text" in i["collaboration"]:
-                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                        collaboration = collaboration + i["collaboration"]["ce:text"]
                     continue    
                 if "affiliation" in i:
                     affiliation = i["affiliation"]
@@ -706,7 +716,7 @@ def _parse_abstract_retrieval(abstract_entry):
                     if "ce:indexed-name" in i["collaboration"]:
                         collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
                     elif "ce:text" in i["collaboration"]:
-                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                        collaboration = collaboration + i["collaboration"]["ce:text"]
             if "author" in authorgrouplistorsingle:
                 author_list = authorgrouplistorsingle["author"]   
                 if(isinstance(author_list, list)):
@@ -740,8 +750,8 @@ def _parse_abstract_retrieval(abstract_entry):
     except Exception as e: 
         print(e)
         traceback.print_exc()
-        print("Exception happened")
-      
+        print("Exception happened for ")
+        print(str(eid))
         affiliationdict = None
         authordict = None
         author_name_str =None
@@ -755,6 +765,8 @@ def _parse_abstract_retrieval(abstract_entry):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
             authordict = collections.OrderedDict(sorted(authordict.items()))
     except Exception as e:
+        print("Exception happened for ")
+        print(str(eid))
         print(e)
         traceback.print_exc()
      
@@ -785,6 +797,8 @@ def _parse_abstract_retrieval(abstract_entry):
                     last_author_affiliation = ', '.join(affiliationdict[str(k)])
                 k=k+1
         except Exception as e:
+            print("Exception happened for ")
+            print(str(eid))
             print(e)
             traceback.print_exc()
             author_name_str =None
@@ -801,6 +815,8 @@ def _parse_abstract_retrieval(abstract_entry):
             if len(collaboration)!=0 and author_with_affliation_str is not None:
                 author_with_affliation_str = author_with_affliation_str +", "+ collaboration
         except Exception as e:
+            print("Exception happened for ")
+            print(str(eid))
             print(e)
             traceback.print_exc()
    
@@ -879,6 +895,8 @@ def _parse_abstract_retrieval(abstract_entry):
                         author_keywords = authorKeywordsList["$"]
 
     except Exception as e: 
+        print("Exception happened for ")
+        print(str(eid))
         print(e)
         traceback.print_exc()
         author_keywords = None
@@ -962,7 +980,7 @@ def _search_scopus(key, query, type_, view, index=0):
         r = requests.get(APIURI.SEARCH_AUTHOR, params=par)
 
     js = r.json()
-    #print(r.url)
+    print(js)
     total_count = int(js['search-results']['opensearch:totalResults'])
     entries = js['search-results']['entry']
     result_df = pd.DataFrame([_parse_entry(entry, type_) for entry in entries])
