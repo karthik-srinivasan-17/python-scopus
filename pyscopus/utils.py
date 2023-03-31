@@ -930,7 +930,6 @@ def _search_scopus(key, query, type_, view, index=0):
         r = requests.get(APIURI.SEARCH_AUTHOR, params=par)
 
     js = r.json()
-    print(js)
     total_count = int(js['search-results']['opensearch:totalResults'])
     entries = js['search-results']['entry']
     result_df = pd.DataFrame([_parse_entry(entry, type_) for entry in entries])
