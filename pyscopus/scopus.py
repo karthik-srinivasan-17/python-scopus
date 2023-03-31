@@ -52,7 +52,7 @@ class Scopus(object):
 
 
         if type(count) is not int:
-            raise ValueError("%s is not a valid input for the number of entries to return." %number)
+            raise ValueError("%s is not a valid input for the number of entries to return." %count)
 
         result_df, total_count = _search_scopus(self.apikey, query, type_, view=view)
 
@@ -180,7 +180,7 @@ class Scopus(object):
         try:
             return _parse_abstract_retrieval(js)
         except:
-            raise ValueError('Abstract for %s not found!' %scopus_id)
+            raise ValueError('Abstract for %s not found!' %scopus_id + "API Response Header is %s", r.headers + "API Response is %s", r)
 
     def retrieve_citation(self, scopus_id_array, year_range):
         '''

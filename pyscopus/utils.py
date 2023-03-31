@@ -248,105 +248,20 @@ def _parse_author(entry):
             'affiliation': institution_name, 'affiliation_id': institution_id})
 
 def _parse_article(entry):
+    user_defined_exception_list=[]
 
-    """nceh_affiliations=["NCEH", "National Center for Environmental Health", 
-                       "ATSDR", "Agency for Toxic Substances and Disease Registry", 
-                       "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
-                       "Division of Environmental Hazards and Health Effects"]
-
-    cdc_only=["CDC", "Centers for Disease Control"]
-    DEHSP_Div =["Division of Environmental Health Science and Practice",
-                "Division of Emergency and Environmental Health Sciences", 
-                "Division of Environmental Hazards and Health Effects"]
-    DLS_Div=["Division of Laboratory Sciences"]
-    ATSDR_Div=["Division of Community Health Investigations", 
-               "Division of Toxicology Human Health Sciences", 
-               "Agency for Toxic Substances and Disease Registry", 
-               "Office of Capacity Development and Applied Prevention Science", 
-               "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
-    try:
-        affiliation, affliationDict = _parse_affiliation(entry['affiliation'])
-    except:
-        affiliation, affliationDict = None
-    try:
-        author = entry["author"]
-        author = sorted(author,key=lambda i:i["@seq"])
-        author_name_list = ""
-        author_with_affliation_string = ""
-        first_author_affiliation=""
-        last_author_affiliation=""
-        for i in author:
-            if len(author_with_affliation_string) != 0:
-                author_with_affliation_string = author_with_affliation_string + "; "
-            temp = i["authname"]
-            if(len(author_name_list) != 0):
-                author_name_list = author_name_list +', '
-            author_name_list = author_name_list+temp
-
-            afidlist = i["afid"]
-            for j in afidlist: 
-                afid = j["$"]
-                author_with_affliation_string = author_with_affliation_string + temp + ", "+ affliationDict[afid]    
-            
-            if author.index(i)==0:
-                first_author_affiliation = affliationDict[afid]   
-            if author.index(i)==len(author)-1:
-                last_author_affiliation = affliationDict[afid]  
-    except:
-        author_name_list = None
-        author_with_affliation_string = None
-        first_author_affiliation = None
-        last_author_affiliation = None
-    try:
-        if first_author_affiliation in nceh_affiliations:
-            NCEH_ATSDR_FIRST = "Yes"
-        elif first_author_affiliation in cdc_only:
-            NCEH_ATSDR_FIRST ="TBD"
-        else:
-            NCEH_ATSDR_FIRST = "No"
-    except:
-        NCEH_ATSDR_FIRST = None
-    try:
-        if last_author_affiliation in nceh_affiliations:
-            NCEH_ATSDR_LAST = "Yes"
-        elif last_author_affiliation in cdc_only:
-            NCEH_ATSDR_LAST ="TBD"
-        else:
-            NCEH_ATSDR_LAST = "No"
-    except:
-        NCEH_ATSDR_LAST = None
-    ### Division of author
-    try:
-        if first_author_affiliation in DEHSP_Div:
-            FIRST_AUTHOR_DIVISION = "DEHSP"
-        elif first_author_affiliation in DLS_Div:
-            FIRST_AUTHOR_DIVISION ="DLS"
-        elif first_author_affiliation in ATSDR_Div:
-            FIRST_AUTHOR_DIVISION ="ATSDR"    
-        else:
-            FIRST_AUTHOR_DIVISION = "TBD"
-    except:
-        FIRST_AUTHOR_DIVISION = None
-
-    try:
-        if last_author_affiliation in DEHSP_Div:
-            LAST_AUTHOR_DIVISION = "DEHSP"
-        elif last_author_affiliation in DLS_Div:
-            LAST_AUTHOR_DIVISION ="DLS"
-        elif last_author_affiliation in ATSDR_Div:
-            LAST_AUTHOR_DIVISION ="ATSDR"    
-        else:
-            LAST_AUTHOR_DIVISION = "TBD"
-    except:
-        LAST_AUTHOR_DIVISION = None """
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
         scopus_id = None
+        uException = "Scopus Id  not available for %s"%eid
+        user_defined_exception_list.append(uException)  
     try:
         eid = entry['eid']
     except:
         eid = None
+        uException = "eid  not available for %s"%eid
+        user_defined_exception_list.append(uException)  
     try:
         pubmed_id = entry['pubmed-id']
     except:
@@ -426,6 +341,8 @@ def _parse_article(entry):
         doi = entry['prism:doi']
     except:
         doi = None
+        uException = "DOI  not available for %s"%eid
+        user_defined_exception_list.append(uException)  
     try:
         citationcount = entry['citedby-count']
     except:
@@ -489,13 +406,13 @@ def _parse_article(entry):
     return pd.Series({'Link':Link,'Authors_ID': author_id_list,'Pubmed_ID_Scopus':pubmed_id,\
                       'EID':eid,'Art No': art_no,'Issue':issue, 'Access Type':open_access,\
             'Page start': pageStart, 'Page end': pageEnd, 'Page count':pageCount,\
-            #'page_range': pagerange,'cover_date': coverdate, 'eissn': eissn,'Authors':author_name_list,"Authors with affliations":author_with_affliation_string,'Affiliations': affiliation,
+            #'page_range': pagerange,'cover_date': coverdate, 'eissn': eissn,'Authors':author_name_list,"Authors with affiliations":author_with_affiliation_string,'Affiliations': affiliation,
             'Year':year,\
             'scopus-id': scopus_id,\
             'Pub_Title': title, 'Source_Title':publicationname,\
             'ISSN': issn, 'ISBN': isbn,  'Volume': volume,\
              'DOI': doi,'Cited by': citationcount, \
-            'Document': aggregationtype, 'Document Type': sub_dc,\
+            'Document': aggregationtype, 'Document Type': sub_dc, 'User Exception':user_defined_exception_list\
             #'full_text': full_text_link
             })
 
@@ -545,55 +462,57 @@ def _parse_author_retrieval(author_entry):
 
     return author_dict
 
-def _parse_affiliation_from_authorgroup(affiliation):
-    affiliation_text = ""
-    if "organization" in affiliation:                
-            organization = affiliation["organization"]
-            if(isinstance(organization, list)):
-                    for l in organization:
-                        tempOrgName = l["$"]
-                        if(len(affiliation_text)!=0):
-                            affiliation_text =affiliation_text +", "   
-                            affiliation_text = affiliation_text + tempOrgName
-            else:
-                    affiliation_text = organization["$"]
-            if "city" in affiliation:
-                affiliation_text = affiliation_text + ", "+ affiliation["city"]
-            if "postalcode" in affiliation:
-                affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
-            if "country" in affiliation:
-                affiliation_text = affiliation_text + ", "+ affiliation["country"]        
+# def _parse_affiliation_from_authorgroup(affiliation):
+#     affiliation_text = ""
+#     if "organization" in affiliation:                
+#             organization = affiliation["organization"]
+#             if(isinstance(organization, list)):
+#                     for l in organization:
+#                         tempOrgName = l["$"]
+#                         if(len(affiliation_text)!=0):
+#                             affiliation_text =affiliation_text +", "   
+#                             affiliation_text = affiliation_text + tempOrgName
+#             else:
+#                     affiliation_text = organization["$"]
+#             if "city" in affiliation:
+#                 affiliation_text = affiliation_text + ", "+ affiliation["city"]
+#             if "postalcode" in affiliation:
+#                 affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
+#             if "country" in affiliation:
+#                 affiliation_text = affiliation_text + ", "+ affiliation["country"]        
     
-    else:
-            affiliation_text = "Affiliation Info not available from scoupus API"
-    return affiliation_text
+#     else:
+#             affiliation_text = "Affiliation Info not available from scoupus API"
+#     return affiliation_text
 
 
 def _parse_abstract_retrieval(abstract_entry):
     
-    nceh_affiliations=["NCEH", "National Center for Environmental Health", 
-                       "ATSDR", "Agency for Toxic Substances and Disease Registry", 
-                       "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
-                       "Division of Environmental Hazards and Health Effects"]
+    # nceh_affiliations=["NCEH", "National Center for Environmental Health", 
+    #                    "ATSDR", "Agency for Toxic Substances and Disease Registry", 
+    #                    "Division of Laboratory Sciences", "Division of Environmental Health Science and Practice",  
+    #                    "Division of Environmental Hazards and Health Effects"]
 
-    cdc_only=["CDC", "Centers for Disease Control"]
-    DEHSP_Div =["Division of Environmental Health Science and Practice",
-                "Division of Emergency and Environmental Health Sciences", 
-                "Division of Environmental Hazards and Health Effects"]
-    DLS_Div=["Division of Laboratory Sciences"]
-    ATSDR_Div=["Division of Community Health Investigations", 
-               "Division of Toxicology Human Health Sciences", 
-               "Agency for Toxic Substances and Disease Registry", 
-               "Office of Capacity Development and Applied Prevention Science", 
-               "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
+    # cdc_only=["CDC", "Centers for Disease Control"]
+    # DEHSP_Div =["Division of Environmental Health Science and Practice",
+    #             "Division of Emergency and Environmental Health Sciences", 
+    #             "Division of Environmental Hazards and Health Effects"]
+    # DLS_Div=["Division of Laboratory Sciences"]
+    # ATSDR_Div=["Division of Community Health Investigations", 
+    #            "Division of Toxicology Human Health Sciences", 
+    #            "Agency for Toxic Substances and Disease Registry", 
+    #            "Office of Capacity Development and Applied Prevention Science", 
+    #            "Office of Community Health and Hazard Assessment", "Office of Innovation and Analytics"]
     author_name_str =""
-    affliation_name_str=""
-    author_with_affliation_str=""
+    affiliation_name_str=""
+    author_with_affiliation_str=""
     first_author_affiliation=""
     last_author_affiliation=""
     affiliationdict={}
     authordict={}
-    affliation_name_list=[]
+    affiliation_name_list=[]
+    user_defined_exception_list=[]
+    system_exception_list=[]
 
     resp = abstract_entry['abstracts-retrieval-response']
     
@@ -645,10 +564,15 @@ def _parse_abstract_retrieval(abstract_entry):
                         elif "ce:text" in affiliation:
                             affiliation_text = affiliation["ce:text"]                      
                         else:
-                            affiliation_text = " "
-                            print("organization and ce:text is null for :"+  str(eid))
+                            #affiliation_text = " "
+                            #print("organization and ce:text is null for :"+  str(eid))
+                            uException = "Affiliation organization/ce:source-text/ce:text not available for %s"%eid
+                            user_defined_exception_list.append(uException)  
                 else:
-                        affiliation_text = " "                
+                        #affiliation_text = " "
+                        if(len(collaboration)==0):
+                            uException = "Affiliation  not available for %s"%eid
+                            user_defined_exception_list.append(uException)              
 
                 if "author" in i:
                     author_list = i["author"]
@@ -675,10 +599,19 @@ def _parse_abstract_retrieval(abstract_entry):
                                 affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
                 else:
                     if(len(collaboration)==0):
-                        print("author is null for :"+  str(eid))
+                        #print("author is null for :"+  str(eid))
+                        uException = "Author not available for %s"%eid
+                        user_defined_exception_list.append(uException) 
 
 
         else:
+            if "collaboration" in authorgrouplistorsingle:
+                    if(len(collaboration)!=0):
+                        collaboration =collaboration +", " 
+                    if "ce:indexed-name" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
+                    elif "ce:text" in i["collaboration"]:
+                        collaboration = collaboration + i["collaboration"]["ce:text"]
             if "affiliation" in authorgrouplistorsingle:
                 affiliation = authorgrouplistorsingle["affiliation"]
                 affiliation_text = " "
@@ -706,17 +639,16 @@ def _parse_abstract_retrieval(abstract_entry):
                         elif "ce:text" in affiliation:
                             affiliation_text = affiliation["ce:text"]                      
                         else:
-                            affiliation_text = " "
-                            print("organization and ce:text is null for :"+  str(eid))
+                            #affiliation_text = " "
+                            #print("organization and ce:text is null for :"+  str(eid))
+                            uException = "Affiliation organization/ce:source-text/ce:text not available for %s"%eid
+                            user_defined_exception_list.append(uException) 
             else:
-                affiliation_text = " "                
-            if "collaboration" in authorgrouplistorsingle:
-                    if(len(collaboration)!=0):
-                        collaboration =collaboration +", " 
-                    if "ce:indexed-name" in i["collaboration"]:
-                        collaboration = collaboration + i["collaboration"]["ce:indexed-name"]
-                    elif "ce:text" in i["collaboration"]:
-                        collaboration = collaboration + i["collaboration"]["ce:text"]
+                #affiliation_text = " "
+                if(len(collaboration)==0):
+                            uException = "Affiliation  not available for %s"%eid
+                            user_defined_exception_list.append(uException)                   
+            
             if "author" in authorgrouplistorsingle:
                 author_list = authorgrouplistorsingle["author"]   
                 if(isinstance(author_list, list)):
@@ -742,21 +674,27 @@ def _parse_abstract_retrieval(abstract_entry):
                                 affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
             else:
                 if(len(collaboration)==0):
-                        print("author is null for :"+  str(eid))
+                        #print("author is null for :"+  str(eid))
+                        uException = "Author not available for %s"%eid
+                        user_defined_exception_list.append(uException) 
                 
                 
                     
 
-    except Exception as e: 
-        print(e)
-        traceback.print_exc()
-        print("Exception happened for ")
-        print(str(eid))
+    except Exception as e:
+        #sException = traceback
+        system_exception_list.append("Exception happened for %s"%eid)
+        system_exception_list.append(e)
+        system_exception_list.append(traceback.stack()) 
+        #rint(e)
+        #traceback
+        #print("Exception happened for ")
+        #print(str(eid))
         affiliationdict = None
         authordict = None
         author_name_str =None
-        affliation_name_str=None
-        author_with_affliation_str=None
+        affiliation_name_str=None
+        author_with_affiliation_str=None
         first_author_affiliation = None
         last_author_affiliation = None  
 
@@ -765,17 +703,22 @@ def _parse_abstract_retrieval(abstract_entry):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
             authordict = collections.OrderedDict(sorted(authordict.items()))
     except Exception as e:
-        print("Exception happened for ")
-        print(str(eid))
-        print(e)
-        traceback.print_exc()
+        # print("Exception happened for ")
+        # print(str(eid))
+        # print(e)
+        system_exception_list.append("Exception happened for %s"%eid)
+        system_exception_list.append(e)
+        system_exception_list.append(traceback.stack()) 
+        #traceback.print_exc()
      
         affiliationdict = None
         authordict = None 
     
     if(affiliationdict is not None and authordict is not None):
         if (len(authordict) != len(affiliationdict)):
-            print("There is mismatch between author and affliation group")
+            #print("There is mismatch between author and affiliation group")
+            uException = "There is mismatch between author and affiliation for %s"%eid
+            user_defined_exception_list.append(uException) 
 
         try:
             k = 1
@@ -784,86 +727,91 @@ def _parse_abstract_retrieval(abstract_entry):
                         author_name_str = author_name_str + ", "
                 if authordict[str(k)] is not None:
                     author_name_str = author_name_str + authordict[str(k)]  
-                affliation_name_list.extend(affiliationdict[str(k)])
-                if(len(author_with_affliation_str)!=0 and author_with_affliation_str[-2:] !="; "):
-                        author_with_affliation_str =author_with_affliation_str +"; "
+                affiliation_name_list.extend(affiliationdict[str(k)])
+                if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
+                        author_with_affiliation_str =author_with_affiliation_str +"; "
                 if authordict[str(k)] is not None:        
-                    author_with_affliation_str = author_with_affliation_str + authordict[str(k)] +"%"+ ', '.join(affiliationdict[str(k)])
+                    author_with_affiliation_str = author_with_affiliation_str + authordict[str(k)] +', '+ ', '.join(affiliationdict[str(k)])
                 else:
-                    author_with_affliation_str = author_with_affliation_str +", "+ '%'.join(affiliationdict[str(k)])    
+                    author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k)])    
                 if k==1:
-                    first_author_affiliation = '%'.join(affiliationdict[str(k)])
+                    first_author_affiliation = ', '.join(affiliationdict[str(k)])
                 if k==len(authordict):
-                    last_author_affiliation = '%'.join(affiliationdict[str(k)])
+                    last_author_affiliation = ', '.join(affiliationdict[str(k)])
                 k=k+1
         except Exception as e:
-            print("Exception happened for ")
-            print(str(eid))
-            print(e)
-            traceback.print_exc()
+            # print("Exception happened for ")
+            # print(str(eid))
+            # print(e)
+            # traceback.print_exc()
+            system_exception_list.append("Exception happened for %s"%eid)
+            system_exception_list.append(e)
+            system_exception_list.append(traceback.stack()) 
             author_name_str =None
-            affliation_name_str=None
-            author_with_affliation_str=None
+            affiliation_name_str=None
+            author_with_affiliation_str=None
             first_author_affiliation = None
             last_author_affiliation = None
 
             
         try:
-            affliation_name_list = set(affliation_name_list)
-            affliation_name_list = list(affliation_name_list)[::-1]
-            affliation_name_str = ', '.join(affliation_name_list) 
-            if len(collaboration)!=0 and author_with_affliation_str is not None:
-                author_with_affliation_str = author_with_affliation_str +", "+ collaboration
+            affiliation_name_list = set(affiliation_name_list)
+            affiliation_name_list = list(affiliation_name_list)[::-1]
+            affiliation_name_str = ', '.join(affiliation_name_list) 
+            if len(collaboration)!=0 and author_with_affiliation_str is not None:
+                author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
         except Exception as e:
-            print("Exception happened for ")
-            print(str(eid))
-            print(e)
-            traceback.print_exc()
+            # print("Exception happened for ")
+            # print(str(eid))
+            # print(e)
+            # traceback.print_exc()
+            system_exception_list.append("Exception happened for %s"%eid)
+            system_exception_list.append(e)
+            system_exception_list.append(traceback.stack()) 
    
  
-    try:
+    # try:
+    #     if first_author_affiliation.split(',')[0] in nceh_affiliations:
+    #         NCEH_ATSDR_FIRST = "Yes"
+    #     elif first_author_affiliation.split(',')[0] in cdc_only:
+    #         NCEH_ATSDR_FIRST ="TBD"
+    #     else:
+    #         NCEH_ATSDR_FIRST = "No"
+    # except:
+    #     NCEH_ATSDR_FIRST = None
+    # try:
+    #     if last_author_affiliation.split(',')[0] in nceh_affiliations:
+    #         NCEH_ATSDR_LAST = "Yes"
+    #     elif last_author_affiliation.split(',')[0] in cdc_only:
+    #         NCEH_ATSDR_LAST ="TBD"
+    #     else:
+    #         NCEH_ATSDR_LAST = "No"
+    # except:
+    #     NCEH_ATSDR_LAST = None
+    # ### Division of author
+    # try:
+    #     if first_author_affiliation.split(',')[0] in DEHSP_Div:
+    #         FIRST_AUTHOR_DIVISION = "DEHSP"
+    #     elif first_author_affiliation.split(',')[0] in DLS_Div:
+    #         FIRST_AUTHOR_DIVISION ="DLS"
+    #     elif first_author_affiliation.split(',')[0] in ATSDR_Div:
+    #         FIRST_AUTHOR_DIVISION ="ATSDR"    
+    #     else:
+    #         FIRST_AUTHOR_DIVISION = "TBD"
+    # except:
+    #     FIRST_AUTHOR_DIVISION = None
 
-        if first_author_affiliation.split(',')[0] in nceh_affiliations:
-            NCEH_ATSDR_FIRST = "Yes"
-        elif first_author_affiliation.split(',')[0] in cdc_only:
-            NCEH_ATSDR_FIRST ="TBD"
-        else:
-            NCEH_ATSDR_FIRST = "No"
-    except:
-        NCEH_ATSDR_FIRST = None
-    try:
-        if last_author_affiliation.split(',')[0] in nceh_affiliations:
-            NCEH_ATSDR_LAST = "Yes"
-        elif last_author_affiliation.split(',')[0] in cdc_only:
-            NCEH_ATSDR_LAST ="TBD"
-        else:
-            NCEH_ATSDR_LAST = "No"
-    except:
-        NCEH_ATSDR_LAST = None
-    ### Division of author
-    try:
-        if first_author_affiliation.split(',')[0] in DEHSP_Div:
-            FIRST_AUTHOR_DIVISION = "DEHSP"
-        elif first_author_affiliation.split(',')[0] in DLS_Div:
-            FIRST_AUTHOR_DIVISION ="DLS"
-        elif first_author_affiliation.split(',')[0] in ATSDR_Div:
-            FIRST_AUTHOR_DIVISION ="ATSDR"    
-        else:
-            FIRST_AUTHOR_DIVISION = "TBD"
-    except:
-        FIRST_AUTHOR_DIVISION = None
-
-    try:
-        if last_author_affiliation.split(',')[0] in DEHSP_Div:
-            LAST_AUTHOR_DIVISION = "DEHSP"
-        elif last_author_affiliation.split(',')[0] in DLS_Div:
-            LAST_AUTHOR_DIVISION ="DLS"
-        elif last_author_affiliation.split(',')[0] in ATSDR_Div:
-            LAST_AUTHOR_DIVISION ="ATSDR"    
-        else:
-            LAST_AUTHOR_DIVISION = "TBD"
-    except:
-        LAST_AUTHOR_DIVISION = None 
+    # try:
+    #     if last_author_affiliation.split(',')[0] in DEHSP_Div:
+    #         LAST_AUTHOR_DIVISION = "DEHSP"
+    #     elif last_author_affiliation.split(',')[0] in DLS_Div:
+    #         LAST_AUTHOR_DIVISION ="DLS"
+    #     elif last_author_affiliation.split(',')[0] in ATSDR_Div:
+    #         LAST_AUTHOR_DIVISION ="ATSDR"    
+    #     else:
+    #         LAST_AUTHOR_DIVISION = "TBD"
+    # except:
+    #     LAST_AUTHOR_DIVISION = None 
 
 
     try:
@@ -895,16 +843,19 @@ def _parse_abstract_retrieval(abstract_entry):
                         author_keywords = authorKeywordsList["$"]
 
     except Exception as e: 
-        print("Exception happened for ")
-        print(str(eid))
-        print(e)
-        traceback.print_exc()
+        # print("Exception happened for ")
+        # print(str(eid))
+        # print(e)
+        # traceback.print_exc()
+        system_exception_list.append("Exception happened for %s"%eid)
+        system_exception_list.append(e)
+        system_exception_list.append(traceback.stack()) 
         author_keywords = None
     # keys to exclude
     unwanted_keys = ('dc:identifier','dc:creator','pii','article-number','link','srctype','eid','pubmed-id','prism:coverDate','prism:aggregationType','prism:url',
                      'source-id','citedby-count','prism:volume','subtype','openaccess','prism:issn','prism:isbn',
                       'prism:issueIdentifier','subtypeDescription','prism:pageRange','prism:endingPage','openaccessFlag',
-                       'prism:doi','prism:startingPage','dc:publisher','prism:issueIdentifier')
+                       'prism:doi','prism:startingPage','dc:publisher')
   
     abstract_dict = {key: coredata[key] for key in coredata.keys()\
                                         if key not in unwanted_keys}
@@ -933,17 +884,16 @@ def _parse_abstract_retrieval(abstract_entry):
     abstract_dict['Author Keywords'] = author_keywords
     abstract_dict['Source_Title'] = abstract_dict.pop('prism:publicationName')
     abstract_dict['Authors'] = author_name_str
-    abstract_dict['Affliations'] = affliation_name_str
-    abstract_dict['Authors with affliations'] = author_with_affliation_str
+    abstract_dict['Affiliations'] = affiliation_name_str
+    abstract_dict['Authors with affiliations'] = author_with_affiliation_str
     abstract_dict['HT_NCEHATSDR_Lead'] = first_author_affiliation
     abstract_dict['HT_NCEHATSDR_Senior'] = last_author_affiliation
-    abstract_dict['NCEH_ATSDR_FIRST'] = NCEH_ATSDR_FIRST
-    abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
-    abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
-    abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
-
-    #print("abstract_dict")
-    #print(abstract_dict)
+    # abstract_dict['NCEH_ATSDR_FIRST'] = NCEH_ATSDR_FIRST
+    # abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
+    # abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
+    # abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
+    abstract_dict['User Exception'] =user_defined_exception_list
+    abstract_dict['System Exception'] =system_exception_list
 
     return abstract_dict
 
