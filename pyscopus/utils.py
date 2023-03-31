@@ -738,16 +738,18 @@ def _parse_abstract_retrieval(abstract_entry):
                         #author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])
                         uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %(str(k).lower(),eid)
                         user_defined_exception_list.append(uException)     
-                    if k==1 and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:
-                        first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
-                    else:
-                        uException = "First Author and Affiliation didn't Match. EID is  %s" %eid
-                        user_defined_exception_list.append(uException) 
-                    if k==len(authordict) and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:
-                        last_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
-                    else:
-                        uException = "Last Author and Affiliation didn't Match. EID is  %s" %eid
-                        user_defined_exception_list.append(uException) 
+                    if k==1:
+                        if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:
+                            first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
+                        else:
+                            uException = "First Author and Affiliation didn't Match. EID is  %s" %eid
+                            user_defined_exception_list.append(uException) 
+                    if k==len(authordict):
+                        if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:
+                            last_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
+                        else:
+                            uException = "Last Author and Affiliation didn't Match. EID is  %s" %eid
+                            user_defined_exception_list.append(uException) 
                     k=k+1
             except Exception as e:
                     system_exception_list.append("Exception happened for %s"%eid)
