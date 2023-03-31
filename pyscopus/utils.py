@@ -706,6 +706,8 @@ def _parse_abstract_retrieval(abstract_entry):
         first_author_affiliation = None
         last_author_affiliation = None  
 
+    print("EID")
+    print(eid)
     print("Affiliation Dict")
     print(affiliationdict)
     try:
