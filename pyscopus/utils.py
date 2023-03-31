@@ -706,6 +706,8 @@ def _parse_abstract_retrieval(abstract_entry):
         first_author_affiliation = None
         last_author_affiliation = None  
 
+    print("Affiliation Dict")
+    print(affiliationdict)
     try:
         if(affiliationdict is not None and authordict is not None):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
@@ -774,6 +776,8 @@ def _parse_abstract_retrieval(abstract_entry):
         try:
             #affiliation_name_list = set(affiliation_name_list)
             #affiliation_name_list = list(affiliation_name_list)[::-1]
+            print("affiliation_name_list")
+            print(affiliation_name_list)
             affiliation_name_str = ', '.join(affiliation_name_list) 
             if len(collaboration)!=0 and author_with_affiliation_str is not None:
                 author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
