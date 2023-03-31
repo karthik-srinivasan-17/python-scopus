@@ -735,7 +735,7 @@ def _parse_abstract_retrieval(abstract_entry):
                     author_with_affiliation_str = author_with_affiliation_str + authordict[str(k).lower()] +', '+ ', '.join(affiliationdict[str(k).lower()])
                 else:
                     #author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])
-                    uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %k%eid
+                    uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %str(k).lower()%eid
                     user_defined_exception_list.append(uException)     
                 if k==1:
                     first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
