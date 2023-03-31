@@ -551,7 +551,7 @@ def _parse_abstract_retrieval(abstract_entry):
                                             tempOrgName = l["$"]
                                             if(len(affiliation_text)!=0):
                                                 affiliation_text =affiliation_text +", "   
-                                                affiliation_text = affiliation_text + tempOrgName
+                                            affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
                                         #print("organization is null for :"+  str(eid))
@@ -631,7 +631,7 @@ def _parse_abstract_retrieval(abstract_entry):
                                             tempOrgName = l["$"]
                                             if(len(affiliation_text)!=0):
                                                 affiliation_text =affiliation_text +", "   
-                                                affiliation_text = affiliation_text + tempOrgName
+                                            affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
                             if "address-part" in affiliation:
@@ -776,8 +776,8 @@ def _parse_abstract_retrieval(abstract_entry):
 
             
         try:
-            #affiliation_name_list = set(affiliation_name_list)
-            #affiliation_name_list = list(affiliation_name_list)[::-1]
+            affiliation_name_list = set(affiliation_name_list)
+            affiliation_name_list = list(affiliation_name_list)[::-1]
             print("affiliation_name_list")
             print(affiliation_name_list)
             affiliation_name_str = ', '.join(affiliation_name_list) 
