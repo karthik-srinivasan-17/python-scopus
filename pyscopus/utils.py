@@ -725,15 +725,18 @@ def _parse_abstract_retrieval(abstract_entry):
             while k <= len(authordict):
                 if(len(author_name_str)!=0 and author_name_str[-2:] !=", "):
                         author_name_str = author_name_str + ", "
-                if authordict[str(k).lower()] is not None:
-                    author_name_str = author_name_str + authordict[str(k).lower()]  
-                affiliation_name_list.extend(affiliationdict[str(k).lower()])
+                if str(k).lower() in authordict and authordict[str(k).lower()] is not None:
+                    author_name_str = author_name_str + authordict[str(k).lower()]
+                if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None: 
+                    affiliation_name_list.extend(affiliationdict[str(k).lower()])
                 if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
                         author_with_affiliation_str =author_with_affiliation_str +"; "
-                if authordict[str(k).lower()] is not None:        
+                if str(k).lower() in authordict and authordict[str(k).lower()] is not None and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:        
                     author_with_affiliation_str = author_with_affiliation_str + authordict[str(k).lower()] +', '+ ', '.join(affiliationdict[str(k).lower()])
                 else:
-                    author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])    
+                    #author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])
+                    uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %k%eid
+                    user_defined_exception_list.append(uException)     
                 if k==1:
                     first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
                 if k==len(authordict):
