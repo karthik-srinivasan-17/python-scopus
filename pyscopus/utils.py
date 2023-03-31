@@ -547,11 +547,11 @@ def _parse_abstract_retrieval(abstract_entry):
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
                             if(isinstance(organization, list)):
-                                        for l in organization:
-                                            tempOrgName = l["$"]
-                                            if(len(affiliation_text)!=0):
-                                                affiliation_text =affiliation_text +", "   
-                                            affiliation_text = affiliation_text + tempOrgName
+                                for l in organization:
+                                    tempOrgName = l["$"]
+                                    if(len(affiliation_text)!=0):
+                                        affiliation_text =affiliation_text +", "   
+                                    affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
                                         #print("organization is null for :"+  str(eid))
@@ -627,11 +627,11 @@ def _parse_abstract_retrieval(abstract_entry):
                         if "organization" in affiliation:                
                             organization = affiliation["organization"]
                             if(isinstance(organization, list)):
-                                        for l in organization:
-                                            tempOrgName = l["$"]
-                                            if(len(affiliation_text)!=0):
+                                for l in organization:
+                                    tempOrgName = l["$"]
+                                    if(len(affiliation_text)!=0):
                                                 affiliation_text =affiliation_text +", "   
-                                            affiliation_text = affiliation_text + tempOrgName
+                                    affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
                             if "address-part" in affiliation:
@@ -706,10 +706,6 @@ def _parse_abstract_retrieval(abstract_entry):
         first_author_affiliation = None
         last_author_affiliation = None  
 
-    print("EID")
-    print(eid)
-    print("Affiliation Dict")
-    print(affiliationdict)
     try:
         if(affiliationdict is not None and authordict is not None):
             affiliationdict = collections.OrderedDict(sorted(affiliationdict.items()))
@@ -778,8 +774,6 @@ def _parse_abstract_retrieval(abstract_entry):
         try:
             affiliation_name_list = set(affiliation_name_list)
             affiliation_name_list = list(affiliation_name_list)[::-1]
-            print("affiliation_name_list")
-            print(affiliation_name_list)
             affiliation_name_str = ', '.join(affiliation_name_list) 
             if len(collaboration)!=0 and author_with_affiliation_str is not None:
                 author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
