@@ -580,23 +580,23 @@ def _parse_abstract_retrieval(abstract_entry):
                         for j in author_list:
                             seqid = j["@seq"]
                             author_text = j["ce:indexed-name"]
-                            authordict = {**authordict, seqid: author_text}
-                            if seqid in affiliationdict:
-                                templist = affiliationdict[seqid]  
+                            authordict = {**authordict, seqid.lower(): author_text}
+                            if seqid.lower() in affiliationdict:
+                                templist = affiliationdict[seqid.lower()]  
                                 templist.append(affiliation_text)
-                                affiliationdict[seqid] = templist
+                                affiliationdict[seqid.lower()] = templist
                             else:
-                                affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+                                affiliationdict = {**affiliationdict, seqid.lower(): [affiliation_text]}
                     else:
                             seqid = author_list["@seq"]
                             author_text = author_list["ce:indexed-name"]
-                            authordict = {**authordict, seqid: author_text}
-                            if seqid in affiliationdict:
-                                templist = affiliationdict[seqid]  
+                            authordict = {**authordict, seqid.lower(): author_text}
+                            if seqid.lower() in affiliationdict:
+                                templist = affiliationdict[seqid.lower()]  
                                 templist.append(affiliation_text)
-                                affiliationdict[seqid] = templist
+                                affiliationdict[seqid.lower()] = templist
                             else:
-                                affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+                                affiliationdict = {**affiliationdict, seqid.lower(): [affiliation_text]}
                 else:
                     if(len(collaboration)==0):
                         #print("author is null for :"+  str(eid))
@@ -655,23 +655,23 @@ def _parse_abstract_retrieval(abstract_entry):
                     for j in author_list:
                             seqid = j["@seq"]
                             author_text = j["ce:indexed-name"]
-                            authordict = {**authordict, seqid: author_text}
-                            if seqid in affiliationdict:
-                                templist = affiliationdict[seqid]
+                            authordict = {**authordict, seqid.lower(): author_text}
+                            if seqid.lower() in affiliationdict:
+                                templist = affiliationdict[seqid.lower()]
                                 templist.append(affiliation_text)
-                                affiliationdict[seqid] = templist
+                                affiliationdict[seqid.lower()] = templist
                             else:
-                                affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+                                affiliationdict = {**affiliationdict, seqid.lower(): [affiliation_text]}
                 else:
                             seqid = author_list["@seq"]
                             author_text = author_list["ce:indexed-name"]
-                            authordict = {**authordict, seqid: author_text}
-                            if seqid in affiliationdict:
-                                templist = affiliationdict[seqid]  
+                            authordict = {**authordict, seqid.lower(): author_text}
+                            if seqid.lower() in affiliationdict:
+                                templist = affiliationdict[seqid.lower()]  
                                 templist.append(affiliation_text)
-                                affiliationdict[seqid] = templist
+                                affiliationdict[seqid.lower()] = templist
                             else:
-                                affiliationdict = {**affiliationdict, seqid: [affiliation_text]}
+                                affiliationdict = {**affiliationdict, seqid.lower(): [affiliation_text]}
             else:
                 if(len(collaboration)==0):
                         #print("author is null for :"+  str(eid))
@@ -725,19 +725,19 @@ def _parse_abstract_retrieval(abstract_entry):
             while k <= len(authordict):
                 if(len(author_name_str)!=0 and author_name_str[-2:] !=", "):
                         author_name_str = author_name_str + ", "
-                if authordict[str(k)] is not None:
-                    author_name_str = author_name_str + authordict[str(k)]  
-                affiliation_name_list.extend(affiliationdict[str(k)])
+                if authordict[str(k).lower()] is not None:
+                    author_name_str = author_name_str + authordict[str(k).lower()]  
+                affiliation_name_list.extend(affiliationdict[str(k).lower()])
                 if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
                         author_with_affiliation_str =author_with_affiliation_str +"; "
-                if authordict[str(k)] is not None:        
-                    author_with_affiliation_str = author_with_affiliation_str + authordict[str(k)] +', '+ ', '.join(affiliationdict[str(k)])
+                if authordict[str(k).lower()] is not None:        
+                    author_with_affiliation_str = author_with_affiliation_str + authordict[str(k).lower()] +', '+ ', '.join(affiliationdict[str(k).lower()])
                 else:
-                    author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k)])    
+                    author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])    
                 if k==1:
-                    first_author_affiliation = ', '.join(affiliationdict[str(k)])
+                    first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
                 if k==len(authordict):
-                    last_author_affiliation = ', '.join(affiliationdict[str(k)])
+                    last_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
                 k=k+1
         except Exception as e:
             # print("Exception happened for ")
@@ -892,8 +892,8 @@ def _parse_abstract_retrieval(abstract_entry):
     # abstract_dict['NCEH_ATSDR_LAST'] = NCEH_ATSDR_LAST
     # abstract_dict['FIRST_AUTHOR_DIVISION'] = FIRST_AUTHOR_DIVISION
     # abstract_dict['LAST_AUTHOR_DIVISION'] = LAST_AUTHOR_DIVISION 
-    abstract_dict['User Exception'] =user_defined_exception_list
-    abstract_dict['System Exception'] =system_exception_list
+    abstract_dict['User Exception'] = user_defined_exception_list 
+    abstract_dict['System Exception'] = system_exception_list
 
     return abstract_dict
 
