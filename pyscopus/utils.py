@@ -555,8 +555,12 @@ def _parse_abstract_retrieval(abstract_entry):
                             else:
                                         affiliation_text = organization["$"]
                                         #print("organization is null for :"+  str(eid))
+                            if "address-part" in affiliation:
+                                affiliation_text = affiliation_text + ", "+ affiliation["address-part"]
                             if "city" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["city"]
+                            if "state" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["state"]
                             if "postalcode" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
                             if "country" in affiliation:
@@ -630,12 +634,16 @@ def _parse_abstract_retrieval(abstract_entry):
                                                 affiliation_text = affiliation_text + tempOrgName
                             else:
                                         affiliation_text = organization["$"]
+                            if "address-part" in affiliation:
+                                affiliation_text = affiliation_text + ", "+ affiliation["address-part"]
                             if "city" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["city"]
+                            if "state" in affiliation:
+                                    affiliation_text = affiliation_text + ", "+ affiliation["state"]
                             if "postalcode" in affiliation:
                                     affiliation_text = affiliation_text + ", "+ affiliation["postalcode"]
                             if "country" in affiliation:
-                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]
+                                    affiliation_text = affiliation_text + ", "+ affiliation["country"]  
                         elif "ce:text" in affiliation:
                             affiliation_text = affiliation["ce:text"]                      
                         else:
@@ -764,8 +772,8 @@ def _parse_abstract_retrieval(abstract_entry):
 
             
         try:
-            affiliation_name_list = set(affiliation_name_list)
-            affiliation_name_list = list(affiliation_name_list)[::-1]
+            #affiliation_name_list = set(affiliation_name_list)
+            #affiliation_name_list = list(affiliation_name_list)[::-1]
             affiliation_name_str = ', '.join(affiliation_name_list) 
             if len(collaboration)!=0 and author_with_affiliation_str is not None:
                 author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
