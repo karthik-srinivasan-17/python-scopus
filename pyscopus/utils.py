@@ -720,41 +720,39 @@ def _parse_abstract_retrieval(abstract_entry):
             uException = "There is mismatch between author and affiliation for %s"%eid
             user_defined_exception_list.append(uException) 
 
-        try:
-            k = 1
-            while k <= len(authordict):
-                if(len(author_name_str)!=0 and author_name_str[-2:] !=", "):
-                        author_name_str = author_name_str + ", "
-                if str(k).lower() in authordict and authordict[str(k).lower()] is not None:
-                    author_name_str = author_name_str + authordict[str(k).lower()]
-                if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None: 
-                    affiliation_name_list.extend(affiliationdict[str(k).lower()])
-                if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
-                        author_with_affiliation_str =author_with_affiliation_str +"; "
-                if str(k).lower() in authordict and authordict[str(k).lower()] is not None and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:        
-                    author_with_affiliation_str = author_with_affiliation_str + authordict[str(k).lower()] +', '+ ', '.join(affiliationdict[str(k).lower()])
-                else:
-                    #author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])
-                    uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %str(k).lower()%eid
-                    user_defined_exception_list.append(uException)     
-                if k==1:
-                    first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
-                if k==len(authordict):
-                    last_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
-                k=k+1
-        except Exception as e:
-            # print("Exception happened for ")
-            # print(str(eid))
-            # print(e)
-            # traceback.print_exc()
-            system_exception_list.append("Exception happened for %s"%eid)
-            system_exception_list.append(e)
-            system_exception_list.append(traceback.stack()) 
-            author_name_str =None
-            affiliation_name_str=None
-            author_with_affiliation_str=None
-            first_author_affiliation = None
-            last_author_affiliation = None
+        
+        k = 1
+        while k <= len(authordict):
+            try:
+                    if(len(author_name_str)!=0 and author_name_str[-2:] !=", "):
+                            author_name_str = author_name_str + ", "
+                    if str(k).lower() in authordict and authordict[str(k).lower()] is not None:
+                        author_name_str = author_name_str + authordict[str(k).lower()]
+                    if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None: 
+                        affiliation_name_list.extend(affiliationdict[str(k).lower()])
+                    if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
+                            author_with_affiliation_str =author_with_affiliation_str +"; "
+                    if str(k).lower() in authordict and authordict[str(k).lower()] is not None and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:        
+                        author_with_affiliation_str = author_with_affiliation_str + authordict[str(k).lower()] +', '+ ', '.join(affiliationdict[str(k).lower()])
+                    else:
+                        #author_with_affiliation_str = author_with_affiliation_str +", "+ ', '.join(affiliationdict[str(k.lower())])
+                        uException = "For Seq ID %s, Author and Affiliation didn't Match. EID is  %s" %(str(k).lower(),eid)
+                        user_defined_exception_list.append(uException)     
+                    if k==1:
+                        first_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
+                    if k==len(authordict):
+                        last_author_affiliation = ', '.join(affiliationdict[str(k).lower()])
+                    k=k+1
+            except Exception as e:
+                    system_exception_list.append("Exception happened for %s"%eid)
+                    system_exception_list.append(e)
+                    system_exception_list.append(traceback.stack()) 
+                    author_name_str =None
+                    affiliation_name_str=None
+                    author_with_affiliation_str=None
+                    first_author_affiliation = None
+                    last_author_affiliation = None
+                    pass
 
             
         try:
