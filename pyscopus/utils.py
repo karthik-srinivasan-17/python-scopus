@@ -341,8 +341,8 @@ def _parse_article(entry):
         doi = entry['prism:doi']
     except:
         doi = None
-        uException = "DOI  not available for %s"%eid
-        user_defined_exception_list.append(uException)  
+        # uException = "DOI  not available for %s"%eid
+        # user_defined_exception_list.append(uException)  
     try:
         citationcount = entry['citedby-count']
     except:
@@ -736,8 +736,8 @@ def _parse_abstract_retrieval(abstract_entry):
                             author_name_str = author_name_str + ", "
                     if str(k).lower() in authordict and authordict[str(k).lower()] is not None:
                         author_name_str = author_name_str + authordict[str(k).lower()]
-                    if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None: 
-                        affiliation_name_list.extend(affiliationdict[str(k).lower()])
+                    # if str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None: 
+                    #     affiliation_name_list.extend(affiliationdict[str(k).lower()])
                     if(len(author_with_affiliation_str)!=0 and author_with_affiliation_str[-2:] !="; "):
                             author_with_affiliation_str =author_with_affiliation_str +"; "
                     if str(k).lower() in authordict and authordict[str(k).lower()] is not None and str(k).lower() in affiliationdict and affiliationdict[str(k).lower()] is not None:        
@@ -772,8 +772,15 @@ def _parse_abstract_retrieval(abstract_entry):
 
             
         try:
-            affiliation_name_list = set(affiliation_name_list)
-            affiliation_name_list = list(affiliation_name_list)[::-1]
+            temp = []
+            new_affiliationdict = dict()
+            for key, val in affiliationdict.items():
+                if val not in temp:
+                    temp.append(val)
+                    new_affiliationdict[key] = val
+            # affiliation_name_list = set(affiliation_name_list)
+            # affiliation_name_list = list(affiliation_name_list)[::-1]
+            affiliation_name_list = new_affiliationdict.values()
             affiliation_name_str = ', '.join(affiliation_name_list) 
             if len(collaboration)!=0 and author_with_affiliation_str is not None:
                 author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
