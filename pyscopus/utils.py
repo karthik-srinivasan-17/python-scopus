@@ -773,17 +773,23 @@ def _parse_abstract_retrieval(abstract_entry):
             
         try:
             temp = []
-            new_affiliationdict = dict()
+            deduplicated_affiliationdict = dict()
             for key, val in affiliationdict.items():
-                if val not in temp:
-                    temp.append(val)
-                    new_affiliationdict[key] = val
+                if isinstance(val,list):
+                    for idx, x in enumerate(val):
+                        if x not in temp:
+                            temp.append(x)
+                            deduplicated_affiliationdict[int(key)+1000+idx] = x
+                else:
+                    if val not in temp:
+                        temp.append(val)
+                        deduplicated_affiliationdict[key] = val
             # affiliation_name_list = set(affiliation_name_list)
             # affiliation_name_list = list(affiliation_name_list)[::-1]
-            affiliation_name_list = new_affiliationdict.values()
-            affiliation_name_str = ', '.join(affiliation_name_list) 
+            affiliation_name_list = deduplicated_affiliationdict.values()
+            affiliation_name_str = '; '.join(affiliation_name_list) 
             if len(collaboration)!=0 and author_with_affiliation_str is not None:
-                author_with_affiliation_str = author_with_affiliation_str +", "+ collaboration
+                author_with_affiliation_str = author_with_affiliation_str +"; "+ collaboration
         except Exception as e:
             # print("Exception happened for ")
             # print(str(eid))
