@@ -251,13 +251,14 @@ def _parse_article(entry):
     user_defined_exception_list=[]
 
 
-     try:
+    try:
         eid = entry['eid']
     except:
         eid = None
-        uException = "eid  not available for %s"%eid
-        user_defined_exception_list.append(uException)  
-        
+        uException = "There are no results"
+        user_defined_exception_list.append(uException)
+        return  pd.Series(uException)
+
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:

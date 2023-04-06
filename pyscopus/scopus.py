@@ -56,6 +56,9 @@ class Scopus(object):
 
         result_df, total_count = _search_scopus(self.apikey, query, type_, view=view)
 
+        if total_count == 0:
+            raise ValueError("No results returned for scoupus search")
+
         if total_count <= count:
             count = total_count
 
@@ -181,7 +184,9 @@ class Scopus(object):
         try:
             return _parse_abstract_retrieval(js)
         except:
-            raise ValueError('Abstract for %s not found!' %scopus_id + "API Response Header is %s", r.headers + "API Response is %s", r)
+            raise ValueError("API Response Header is %s"%r.headers)
+            raise ValueError("API Response is %s"%r)
+            raise ValueError('Abstract for %s not found!'%scopus_id ) 
 
     def retrieve_citation(self, scopus_id_array, year_range):
         '''
