@@ -56,8 +56,8 @@ class Scopus(object):
 
         result_df, total_count = _search_scopus(self.apikey, query, type_, view=view)
 
-        if total_count == 0:
-            raise ValueError("No results returned for scoupus search")
+        # if total_count == 0:
+        #     raise ValueError("No results returned for scoupus search")
 
         if total_count <= count:
             count = total_count
