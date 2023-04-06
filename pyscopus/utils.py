@@ -250,18 +250,21 @@ def _parse_author(entry):
 def _parse_article(entry):
     user_defined_exception_list=[]
 
+
+     try:
+        eid = entry['eid']
+    except:
+        eid = None
+        uException = "eid  not available for %s"%eid
+        user_defined_exception_list.append(uException)  
+        
     try:
         scopus_id = entry['dc:identifier'].split(':')[-1]
     except:
         scopus_id = None
         uException = "Scopus Id  not available for %s"%eid
         user_defined_exception_list.append(uException)  
-    try:
-        eid = entry['eid']
-    except:
-        eid = None
-        uException = "eid  not available for %s"%eid
-        user_defined_exception_list.append(uException)  
+   
     try:
         pubmed_id = entry['pubmed-id']
     except:
